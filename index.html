@@ -11,39 +11,37 @@
 		<link rel="stylesheet" href="sidebar.css">
 	</head>
 	<body>
-		<div class="row"><div class="col-md-12"><h1>ELITE ENGINEERS</h1></div></div>
-		<div class="row"><div id="menu" class="col-md-10"><a href="#" class="btn btn-success" id="menu-toggle">Toggle sidebar</a></div></div>
-
-		<div id="wrapper">
-			<!-- Sidebar -->
-			<div id="sidebar-wrapper">
-				<ul class="sidebar-nav">
-					<li><a href="#">Thing 1</a></li>
-					<li><a href="#">Thing 2</a></li>
-					<li><a href="#">Thing 3</a></li>
-				</ul>
+		<div class="container-fluid">
+			<div class="row">
+				<div id="header" class="col-md-12"><h1>ELITE ENGINEERS</h1></div>
 			</div>
 
-			<!-- Content -->
-			<div id="content-wrapper">
-				<div class="container-fluid">
+			<!-- Sidebar -->
+			<div class="row">
+				<div id="sidebar-column" class="col-md-2">
+					<ul class="sidebar-nav">
+						<li><a href="#">Introduction</a></li>
+						<li><a href="#">Viewer</a></li>
+						<li><a href="#">Calculator</a></li>
+					</ul>
+				</div>
+				<!-- Content -->
+				<div id="content-column" class="col-md-10">
+					<h4 class="red">IN ORDER FOR YOU TO BE ABLE TO USE THIS DOC, DO THE FOLLOWING</h4>
+					<p class="red">
+						1: Click File-menu > Make a Copy... (If you don't, you will not be able to use e.g. the calculator or get access to more information)<br>
+						2: In the copy you just made, click View-menu > Hidden sheets. (The sheets containing e.g. the calculator are hidden on purpose, so you have to unhide them)
+					</p>
 					<div class="row">
-						<div class="col-lg-12">
-							<h3>Content right of sidebar here.com</h3>
-							<p>Parragraf</p>
-						</div>
+						<div id="group-one-column" class="col-md-3">Content group 1</div>
+						<div id="group-two-column" class="col-md-8 col-md-offset-1">Content group 2</div>
 					</div>
 				</div>
 			</div>
 		</div>
 
+
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
 		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
-		<script>
-			$("#menu-toggle").click(function(element) {
-				element.preventDefault();
-				$("#wrapper").toggleClass("menuDisplayed");
-			});
-		</script>
 	</body>
 </html>

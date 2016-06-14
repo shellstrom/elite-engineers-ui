@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<!-- Required meta tags always come first -->
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta http-equiv="x-ua-compatible" content="ie=edge">
+
+		<!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">-->
+		<link rel="stylesheet" href="css/bootstrap.css">
+		<link rel="stylesheet" href="sidebar.css">
+	</head>
+	<body>
+		<div class="row"><div class="col-md-12"><h1>ELITE ENGINEERS</h1></div></div>
+		<div class="row"><div id="menu" class="col-md-10"><a href="#" class="btn btn-success" id="menu-toggle">Toggle sidebar</a></div></div>
+
+		<div id="wrapper">
+			<!-- Sidebar -->
+			<div id="sidebar-wrapper">
+				<ul class="sidebar-nav">
+					<li><a href="#">Thing 1</a></li>
+					<li><a href="#">Thing 2</a></li>
+					<li><a href="#">Thing 3</a></li>
+				</ul>
+			</div>
+
+			<!-- Content -->
+			<div id="content-wrapper">
+				<div class="container-fluid">
+					<div class="row">
+						<div class="col-lg-12">
+							<h3>Content right of sidebar here.com</h3>
+							<p>Parragraf</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
+		<script>
+			$("#menu-toggle").click(function(element) {
+				element.preventDefault();
+				$("#wrapper").toggleClass("menuDisplayed");
+			});
+		</script>
+	</body>
+</html>

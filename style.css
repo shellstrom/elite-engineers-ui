@@ -7,7 +7,7 @@ body .container-fluid {
 }
 
 #header {
-    background-image: url('assets/drawables/starry-background.jpg');
+    background-image: url("assets/drawables/starry-background.jpg");
 }
 
 #header h1 {
@@ -20,6 +20,15 @@ body .container-fluid {
 #header img{
     float: right;
     margin-top: -105px;
+}
+
+.card-header.bg-dark {
+    /*background: -webkit-linear-gradient(top, black, black, black, black, black, black, darkorange);*/
+    /*background: -webkit-linear-gradient(top, black, black, black, black, black, black, black, black, black, black, black, black, black, black, black, black, #995c00);*/
+    background: -webkit-linear-gradient(top, #0c0d0d, #0c0d0d, #0c0d0d, #0c0d0d, #0c0d0d, #0c0d0d, #0c0d0d, #0c0d0d, #0c0d0d, #0c0d0d, #0c0d0d, #0c0d0d, #0c0d0d, #0c0d0d, #0c0d0d, #0c0d0d, #995c00);
+    border-bottom: 1px solid darkorange;
+    border-radius: 0.2rem;
+    box-shadow: 0 4px 10px -6px orange;
 }
 
 #sidebar-column {
@@ -40,10 +49,23 @@ body .container-fluid {
     padding: 0px;
 }
 
+#felicity-farseer-avatar {
+    width: 101px;
+    height: 101px;
+    float:left;
+    left: 0;
+    top: 0;
+    background: url("assets/drawables/felicity-farseer-avatar.jpg");
+}
+
+.felicity-farseer-table {
+    position: relative;
+    padding-left: 101px;
+}
+
 .bg-dark {
     background: #4c4c4c;
 }
-
 
 #group-two-column {
     border: 2px solid #656e75;

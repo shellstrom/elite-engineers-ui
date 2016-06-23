@@ -1,0 +1,31 @@
+body {
+    background: #0c0d0d;
+}
+
+.large-top-buffer {
+    margin-top: 2rem;
+}
+
+.small-top-buffer {
+    margin-top: 1rem;
+}
+
+.small-top-padding {
+    padding-top: 1rem;
+}
+#avatar, #avatar-quote, #history, #allegience, #home-system {
+    background: black;
+    color: darkorange;
+}
+
+#avatar-quote h3 {
+    color: white;
+}
+
+.profile h6 {
+    color: #cf6800;
+}
+
+.profile h3 {
+    color: white;
+}

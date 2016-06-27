@@ -1,5 +1,7 @@
 body {
-    background: #0c0d0d;
+    background-image: url("../assets/drawables/ship-backdrop.png");
+    background-repeat: no-repeat;
+    
 }
 
 .large-top-buffer {
@@ -42,6 +44,15 @@ body {
 .specialisation-glyphs {
     display: inline-block;
 
+}
+
+.glyph-nut {
+    background: url("../assets/drawables/glyph-nut-inverted.png");
+    background-size: 100% 100%;
+    display: inline-block;
+    width: 18px;
+    height: 21px;
+    margin-left: 0.2rem;
 }
 
 .specialisation-glyphs img {

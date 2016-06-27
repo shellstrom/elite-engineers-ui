@@ -1,4 +1,10 @@
+@font-face {
+    font-family: Michroma;
+    src: url(assets/fonts/michroma.ttf);
+}
+
 body {
+    font-family: Michroma;
     background: #1b1b1b;
 }
 

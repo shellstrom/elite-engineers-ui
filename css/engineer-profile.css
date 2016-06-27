@@ -13,13 +13,46 @@ body {
 .small-top-padding {
     padding-top: 1rem;
 }
-#avatar, #avatar-quote, #history, #allegience, #home-system {
+
+#avatar, #avatar-quote, #history, #allegience, #home-system, #specialisations-list {
     background: black;
     color: darkorange;
 }
 
-#avatar-quote h3 {
+#avatar {
+    padding-left: 0;
+}
+
+#avatar-quote h5, #specialisations h5 {
     color: white;
+}
+
+#specialisations-list .row{
+    background: #271203;
+    margin-top: 0.25rem;
+    padding-top: .5rem;
+    padding-bottom: .5rem;
+}
+
+#specialisations {
+    padding-top: 0.25rem;
+    padding-bottom: 0.25rem;
+}
+
+.specialisation-glyphs {
+    display: inline-block;
+
+}
+
+.specialisation-glyphs img {
+    width: 18px;
+    height: 21px;
+    margin-left: 0.2rem;
+}
+
+.orange-header {
+    border-top: 2px solid #cf6800;
+    background: -webkit-linear-gradient(bottom, #0c0d0d, #642e08);
 }
 
 .profile h6 {

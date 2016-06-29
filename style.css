@@ -6,6 +6,7 @@
 body {
     font-family: Michroma;
     background: #1b1b1b;
+    color: darkorange;
 }
 
 body .container-fluid {
@@ -82,8 +83,16 @@ body .container-fluid {
     margin-right: 0;
 }
 
+.white {
+    color: white;
+}
+
 .red {
     color: red;
+}
+
+.red-border {
+    border: 1px solid red;
 }
 
 .right {

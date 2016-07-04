@@ -13,3 +13,18 @@ button {
 td.no-top-border {
     border-top: 0;
 }
+
+.flat-butt {
+    display: inline-block;
+    padding: 0.5rem;
+    border: 0;
+    background: #291607;
+    color: #ff7100;
+    cursor: pointer;
+    outline: 0;
+}
+.flat-butt:hover {
+    background: #ff7100;
+    color: #291607;
+}
+

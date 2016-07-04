@@ -167,10 +167,29 @@ b.blue {
     background: -webkit-radial-gradient(top, #642e08, #0c0d0d);
 }
 
+.orange-header h6 {
+    line-height: 2rem;
+}
+
 .removed {
     display: none;
 }
 
 .bolder {
     font-weight: bolder;
+}
+
+.no-padding {
+    padding: 0;
+    margin: 0;
+}
+
+.eq-height {
+    display: table;
+}
+
+.eq-height .panel {
+    float: none;
+    display: table-cell;
+    vertical-align: top;
 }

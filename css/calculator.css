@@ -5,3 +5,11 @@
 button {
     color: initial;
 }
+
+.table-inverse {
+    background-color: rgba(255, 0, 0, 0);
+}
+
+td.no-top-border {
+    border-top: 0;
+}

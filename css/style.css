@@ -114,6 +114,26 @@ body .container-fluid {
     border: 1px solid red;
 }
 
+b.red {
+    color: red;
+}
+
+.green {
+    color: #029e4c;
+}
+
+.blue {
+    color: #00b3f7;
+}
+
+b.blue {
+    color: #00b3f7;
+}
+
+.orange {
+    color: #ff7100;
+}
+
 .right {
     float: right;
 }

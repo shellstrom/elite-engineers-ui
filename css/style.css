@@ -144,9 +144,13 @@ body .container-fluid {
 
 .orange-header {
     border-top: 2px solid #cf6800;
-    background: -webkit-linear-gradient(bottom, #0c0d0d, #642e08);
+    background: -webkit-radial-gradient(top, #642e08, #0c0d0d);
 }
 
 .removed {
     display: none;
+}
+
+.bolder {
+    font-weight: bolder;
 }

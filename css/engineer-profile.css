@@ -30,7 +30,7 @@ body {
 }
 
 .glyph-nut {
-    background: url("../assets/drawables/glyph-nut-inverted.png");
+    background: url("../assets/drawables/glyph-nut-bordered-2.png");
     background-size: 100% 100%;
     display: inline-block;
     width: 18px;
@@ -46,8 +46,13 @@ body {
 
 .profile h6 {
     color: #cf6800;
+    font-weight: bolder;
 }
 
 .profile h3 {
     color: white;
+}
+
+.profile {
+    background-color: black;
 }

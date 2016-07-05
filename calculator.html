@@ -39,7 +39,7 @@
             </div>
             <div class="row small-top-buffer">
                 <div class="col-lg-5 no-padding">
-                    <button class="btn-block flat-butt" type="button" data-toggle="modal" data-target="#myModal">Select ship</button>
+                    <button class="btn-block flat-butt" type="button" data-toggle="modal" data-target="#selectShipModal">Select ship</button>
                 </div>
                 <div class="col-lg-5 col-lg-offset-1"></div>
             </div>
@@ -145,14 +145,14 @@
         </div>
     </div>
 
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal fade" id="selectShipModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content modal-background">
                 <div class="modal-header orange-header">
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
-                    <h4 class="modal-title" id="myModalLabel">Select ship</h4>
+                    <h4 class="modal-title" id="selectShipModalLabel">Select ship</h4>
                 </div>
                 <div class="modal-body">
                     <div class="list-wrapper overflowed">
@@ -166,7 +166,34 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn-block flat-butt">Add new ship</button>
+                    <button type="button" class="btn-block flat-butt" data-toggle="modal" data-target="#addShipModal">Add new ship</button>
+                    <button type="button" class="btn-block flat-butt" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="addShipModal" tabindex="-1" role="dialog" aria-labelledby="addShipModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content modal-background">
+                <div class="modal-header orange-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    <h4 class="modal-title" id="addShipModalLabel">Add new ship</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="list-wrapper overflowed">
+                        <form>
+                            <fieldset class="form-group">
+                                <label for="exampleTextarea">Paste your <a href="http://coriolis.io">coriolis.io</a> ship profile here</label>
+                                <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-block flat-butt">Add ship</button>
                     <button type="button" class="btn-block flat-butt" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -189,7 +216,8 @@
 
     }
 
-    $("#myModal").modal('show');
+    $("#selectShipModal").modal('show');
+    //$("#addShipModal").modal('show');
 </script>
 </body>
 </html>

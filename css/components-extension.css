@@ -1,0 +1,54 @@
+.flat-butt {
+    display: inline-block;
+    padding: 0.5rem;
+    border: 0;
+    background: #291607;
+    color: #ff7100;
+    cursor: pointer;
+    outline: 0;
+}
+
+.flat-butt:hover {
+    background: #ff7100;
+    color: #291607;
+}
+
+#sidebar-column {
+    display:none;
+}
+
+.form-orange {
+    font-size: 2rem;
+}
+
+.btn-xlarge {
+    padding: 8px 18px;
+    margin: 0;
+    font-size: 3rem;
+    line-height: normal;
+    vertical-align: top;
+}
+
+.half-width {
+    width: 49%;
+}
+
+.form-orange {
+    background-color: black;
+    border-color: darkorange;
+    color: darkorange;
+}
+
+@media screen and (min-width: 980px) /* Desktop */ {
+    #sidebar-column {
+        display: initial;
+    }
+
+    .form-orange {
+        font-size: initial;
+    }
+
+    .btn-xlarge {
+        display: none;
+    }
+}

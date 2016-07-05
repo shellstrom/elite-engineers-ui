@@ -14,6 +14,10 @@ td.no-top-border {
     border-top: 0;
 }
 
+.orange-header {
+    border-bottom-color: black;
+}
+
 .flat-butt {
     display: inline-block;
     padding: 0.5rem;
@@ -23,6 +27,7 @@ td.no-top-border {
     cursor: pointer;
     outline: 0;
 }
+
 .flat-butt:hover {
     background: #ff7100;
     color: #291607;
@@ -41,6 +46,10 @@ td.no-top-border {
     background: url("../assets/drawables/ship-backdrop.png");
 }
 
+.modal-footer {
+    border-top-color: black;
+}
+
 a.list-group-item-inverted {
     color: #ff7100;
     background-color: #291607;
@@ -50,6 +59,11 @@ a.list-group-item-inverted {
 a.list-group-item-inverted:hover {
     color: #291607;
     background-color: #ff7100;
+}
+
+a.list-group-item-inverted:hover .flat-butt {
+    background: #ff7100;
+    color: #291607;
 }
 
 a.list-group-item-inverted button {

@@ -28,3 +28,30 @@ td.no-top-border {
     color: #291607;
 }
 
+.overflowed {
+    overflow-y: scroll;
+}
+
+.list-wrapper {
+    max-height: 15rem;
+}
+
+.modal-background {
+    background-color: transparent;
+    background: url("../assets/drawables/ship-backdrop.png");
+}
+
+a.list-group-item-inverted {
+    color: #ff7100;
+    background-color: #291607;
+    border-color: #291607;
+}
+
+a.list-group-item-inverted:hover {
+    color: #291607;
+    background-color: #ff7100;
+}
+
+a.list-group-item-inverted button {
+    margin-top: -0.5rem;
+}

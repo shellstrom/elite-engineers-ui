@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Components</title>
 </head>
 <body>
 
@@ -13,7 +13,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>Elite Engineers</title>
+    <title>Components</title>
     <link rel="stylesheet" href="css/bootstrap-glyphicons.css">
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/style.css">
@@ -25,7 +25,7 @@
     <div data-reactroot="">
         <div class="container-fluid">
             <div class="row">
-                <div id="header"><a href="/"><h1>ELITE ENGINEERS</h1><img class="image engineer-header"></a></div>
+                <div id="header"><a href="/"><h1>COMPONENTS</h1><img class="image engineer-header"></a></div>
             </div>
             <div class="row">
                 <div class="col-md-2" id="sidebar-column">
@@ -37,41 +37,72 @@
                     </ul>
                 </div>
                 <div class="col-md-10" id="content-column">
-                    <div><h1>Components</h1>
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th>Personal Stock</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td><h4>Aberrant Shield Pattern Analysis</h4></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input class="form-control form-orange" type="number">
-                                    <button class="flat-butt btn-xlarge half-width">+</button>
-                                    <button class="flat-butt btn-xlarge half-width">&ndash;</button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td><h4>Adaptive Encryptors Capture</h4></td>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <input class="form-control form-orange" type="number">
-                                    <button class="flat-butt btn-xlarge half-width">+</button>
-                                    <button class="flat-butt btn-xlarge half-width">&ndash;</button>
-                                </td>
-                            </tr>
-                            </tbody>
-                        </table>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <table id="component-table" class="table">
+                                <thead>
+                                <tr>
+                                    <th>Personal stock</th>
+                                    <th>Component</th>
+                                    <th>Type</th>
+                                    <th>Subtype</th>
+                                    <th>Rarity</th>
+                                    <th>Location</th>
+                                    <th>Mission reward</th>
+                                </tr>
+                                </thead>
+                                <tr>
+                                    <td>
+                                        <p class="component-p">Aberrant Shield Pattern Analysis</p>
+                                        <button class="flat-butt btn-xlarge half-width">+</button>
+                                        <input class="form-control form-orange" type="number">
+                                        <button class="flat-butt btn-xlarge half-width">&ndash;</button>
+                                    </td>
+                                    <td class="component-td">Aberrant Shield Pattern Analysis</td>
+                                    <td class="component-td">Data</td>
+                                    <td class="component-td">Shield Frequency System</td>
+                                    <td class="component-td">4</td>
+                                    <td class="component-td">NPC Ship Scanning</td>
+                                    <td class="component-td">Yes</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p class="component-p">Abnormal Compact Emission Data</p>
+                                        <button class="flat-butt btn-xlarge half-width">+</button>
+                                        <input class="form-control form-orange" type="number">
+                                        <button class="flat-butt btn-xlarge half-width">&ndash;</button>
+                                    </td>
+                                    <td class="component-td">Abnormal Compact Emission Data</td>
+                                    <td class="component-td">Data</td>
+                                    <td class="component-td">Emission Data</td>
+                                    <td class="component-td">5</td>
+                                    <td class="component-td">Ship Wreck Salvage NPC Ship Scanning</td>
+                                    <td class="component-td">Yes</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <p class="component-p">Adaptive Encryptors Capture</p>
+                                        <button class="flat-butt btn-xlarge half-width">+</button>
+                                        <input class="form-control form-orange" type="number">
+                                        <button class="flat-butt btn-xlarge half-width">&ndash;</button>
+                                    </td>
+                                    <td class="component-td">Adaptive Encryptors Capture</td>
+                                    <td class="component-td">Data</td>
+                                    <td class="component-td">Encryption Code</td>
+                                    <td class="component-td">5</td>
+                                    <td class="component-td">Ship Wreck Salvage</td>
+                                    <td class="component-td">Yes</td>
+                                </tr>
+                            </table>
+                        </div>
                     </div>
+
+
                 </div>
             </div>
         </div>
     </div>
+</div>
 </div>
 <script src="/bundle.js"></script>
 

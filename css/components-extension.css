@@ -1,6 +1,9 @@
+#content-column {
+    background: transparent;
+}
+
 .flat-butt {
     display: inline-block;
-    padding: 0.5rem;
     border: 0;
     background: #291607;
     color: #ff7100;
@@ -17,26 +20,54 @@
     display:none;
 }
 
+.form-control {
+    border-radius: 0;
+}
+
 .form-orange {
     font-size: 2rem;
 }
 
 .btn-xlarge {
+    display: inline-block;
     padding: 8px 18px;
     margin: 0;
     font-size: 3rem;
     line-height: normal;
-    vertical-align: top;
 }
 
 .half-width {
-    width: 49%;
+    width: 29%;
 }
 
 .form-orange {
+    display: inline-block;
+    width: 33%;
+    font-size: 3rem;
     background-color: black;
     border-color: darkorange;
     color: darkorange;
+}
+
+.component-p {
+    display: block;
+}
+
+thead {
+    display: none;
+}
+
+.table thead th {
+    border-bottom-color: darkorange;
+}
+
+.table th, .table td {
+    color: darkorange;
+    border-top: 0;
+}
+
+td.component-td {
+    display: none;
 }
 
 @media screen and (min-width: 980px) /* Desktop */ {
@@ -50,5 +81,22 @@
 
     .btn-xlarge {
         display: none;
+    }
+
+    .component-p {
+        display: none;
+    }
+
+    thead {
+        display: table-header-group;
+    }
+
+    td.component-td {
+        display: table-cell;
+    }
+
+    .form-orange {
+        width: 100%;
+        font-size: 1rem;
     }
 }

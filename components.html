@@ -54,9 +54,9 @@
                                 <tr>
                                     <td>
                                         <p class="component-p">Aberrant Shield Pattern Analysis</p>
-                                        <button class="flat-butt btn-xlarge half-width">+</button>
-                                        <input class="form-control form-orange" type="number">
-                                        <button class="flat-butt btn-xlarge half-width">&ndash;</button>
+                                        <button id="button-minus-one" class="flat-butt btn-xlarge half-width" onclick="minus(this)">&ndash;</button>
+                                        <input id="storage-one" class="form-control form-orange" type="number">
+                                        <button id="button-plus-one" class="flat-butt btn-xlarge half-width" onclick="plus(this)">+</button>
                                     </td>
                                     <td class="component-td">Aberrant Shield Pattern Analysis</td>
                                     <td class="component-td">Data</td>
@@ -68,9 +68,9 @@
                                 <tr>
                                     <td>
                                         <p class="component-p">Abnormal Compact Emission Data</p>
-                                        <button class="flat-butt btn-xlarge half-width">+</button>
-                                        <input class="form-control form-orange" type="number">
-                                        <button class="flat-butt btn-xlarge half-width">&ndash;</button>
+                                        <button id="button-minus-two" class="flat-butt btn-xlarge half-width" onclick="minus(this)">&ndash;</button>
+                                        <input id="storage-two" class="form-control form-orange" type="number">
+                                        <button id="button-plus-two" class="flat-butt btn-xlarge half-width" onclick="plus(this)">+</button>
                                     </td>
                                     <td class="component-td">Abnormal Compact Emission Data</td>
                                     <td class="component-td">Data</td>
@@ -82,9 +82,9 @@
                                 <tr>
                                     <td>
                                         <p class="component-p">Adaptive Encryptors Capture</p>
-                                        <button class="flat-butt btn-xlarge half-width">+</button>
-                                        <input class="form-control form-orange" type="number">
-                                        <button class="flat-butt btn-xlarge half-width">&ndash;</button>
+                                        <button id="button-minus-three" class="flat-butt btn-xlarge half-width" onclick="minus(this)">&ndash;</button>
+                                        <input id="storage-three" class="form-control form-orange" type="number">
+                                        <button id="button-plus-three" class="flat-butt btn-xlarge half-width" onclick="plus(this)">+</button>
                                     </td>
                                     <td class="component-td">Adaptive Encryptors Capture</td>
                                     <td class="component-td">Data</td>
@@ -104,7 +104,39 @@
     </div>
 </div>
 </div>
-<script src="/bundle.js"></script>
+<script>
+    function plus(element) {
+        var id = element.id;
+        var lastWord = id.split('-').pop();
+        var storageField = document.getElementById('storage-' +lastWord);
+        var storageFieldValue = storageField.value;
+        if(isNumeric(storageFieldValue)) {
+            storageField.value++;
+        } else {
+            storageField.value = 1;
+        }
+    }
+
+    function minus(element) {
+        var id = element.id;
+        var lastWord = id.split('-').pop();
+        var storageField = document.getElementById('storage-' +lastWord);
+        var storageFieldValue = storageField.value;
+        if(isNumeric(storageFieldValue)) {
+            if(storageFieldValue < 1) {
+                storageField.value = 0;
+            } else {
+                storageField.value--;
+            }
+        } else {
+            storageField.value = 0;
+        }
+    }
+
+    function isNumeric(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+</script>
 
 
 </body>

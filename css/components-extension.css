@@ -24,15 +24,11 @@
     border-radius: 0;
 }
 
-.form-orange {
-    font-size: 2rem;
-}
-
 .btn-xlarge {
     display: inline-block;
     padding: 8px 18px;
     margin: 0;
-    font-size: 3rem;
+    font-size: 2rem;
     line-height: normal;
 }
 
@@ -43,7 +39,7 @@
 .form-orange {
     display: inline-block;
     width: 33%;
-    font-size: 3rem;
+    font-size: 2rem;
     background-color: black;
     border-color: darkorange;
     color: darkorange;
@@ -68,6 +64,11 @@ thead {
 
 td.component-td {
     display: none;
+}
+
+#header h1 {
+    text-align: center;
+    font-size: 2rem;
 }
 
 @media screen and (min-width: 980px) /* Desktop */ {
@@ -98,5 +99,10 @@ td.component-td {
     .form-orange {
         width: 100%;
         font-size: 1rem;
+    }
+
+    #header h1 {
+        text-align: unset;
+        font-size: 3rem;
     }
 }

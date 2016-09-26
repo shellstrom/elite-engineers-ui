@@ -14,6 +14,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>Components</title>
+    <script src="assets/values/components.js" ></script>
     <link rel="stylesheet" href="css/bootstrap-glyphicons.css">
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/style.css">
@@ -51,48 +52,8 @@
                                     <th>Mission reward</th>
                                 </tr>
                                 </thead>
-                                <tr>
-                                    <td>
-                                        <p class="component-p">Aberrant Shield Pattern Analysis</p>
-                                        <button id="button-minus-one" class="flat-butt btn-xlarge half-width" onclick="minus(this)">&ndash;</button>
-                                        <input id="storage-one" class="form-control form-orange" type="number" min="0">
-                                        <button id="button-plus-one" class="flat-butt btn-xlarge half-width" onclick="plus(this)">+</button>
-                                    </td>
-                                    <td class="component-td">Aberrant Shield Pattern Analysis</td>
-                                    <td class="component-td">Data</td>
-                                    <td class="component-td">Shield Frequency System</td>
-                                    <td class="component-td">4</td>
-                                    <td class="component-td">NPC Ship Scanning</td>
-                                    <td class="component-td">Yes</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <p class="component-p">Abnormal Compact Emission Data</p>
-                                        <button id="button-minus-two" class="flat-butt btn-xlarge half-width" onclick="minus(this)">&ndash;</button>
-                                        <input id="storage-two" class="form-control form-orange" type="number" min="0">
-                                        <button id="button-plus-two" class="flat-butt btn-xlarge half-width" onclick="plus(this)">+</button>
-                                    </td>
-                                    <td class="component-td">Abnormal Compact Emission Data</td>
-                                    <td class="component-td">Data</td>
-                                    <td class="component-td">Emission Data</td>
-                                    <td class="component-td">5</td>
-                                    <td class="component-td">Ship Wreck Salvage NPC Ship Scanning</td>
-                                    <td class="component-td">Yes</td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <p class="component-p">Adaptive Encryptors Capture</p>
-                                        <button id="button-minus-three" class="flat-butt btn-xlarge half-width" onclick="minus(this)">&ndash;</button>
-                                        <input id="storage-three" class="form-control form-orange" type="number" min="0">
-                                        <button id="button-plus-three" class="flat-butt btn-xlarge half-width" onclick="plus(this)">+</button>
-                                    </td>
-                                    <td class="component-td">Adaptive Encryptors Capture</td>
-                                    <td class="component-td">Data</td>
-                                    <td class="component-td">Encryption Code</td>
-                                    <td class="component-td">5</td>
-                                    <td class="component-td">Ship Wreck Salvage</td>
-                                    <td class="component-td">Yes</td>
-                                </tr>
+                                <tbody id="components-body">
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -105,6 +66,74 @@
 </div>
 </div>
 <script>
+
+    generateComponentsList();
+    function generateComponentsList() {
+        var tBody = document.getElementById('components-body');
+        var components = DATA;
+        var nrOfComponents = Object.keys(DATA).length;
+        for(var i = 0; i < nrOfComponents; i++) {
+            var tr = document.createElement('tr');
+            var td = document.createElement('td');
+            var key = Object.keys(DATA)[i];
+            var p = document.createElement('p');
+            var buttonMinus = document.createElement('button');
+            var input = document.createElement('input');
+            var buttonPlus = document.createElement('button');
+            p.className = 'component-p';
+            p.innerHTML = DATA[key].name;
+            td.appendChild(p);
+            buttonMinus.id = 'button-minus-one';
+            buttonMinus.className = 'flat-butt btn-xlarge half-width';
+            buttonMinus.onclick = function () {minus(this);};
+            buttonMinus.innerHTML = '-';
+            td.appendChild(buttonMinus);
+            input.id = key;
+            input.name = key;
+            input.onkeyup = function() { storeValue(this)};
+            input.onchange = function() { storeValue(this)};
+            input.className = 'form-control form-orange';
+            input.type = 'number';
+            input.value = getStoredValue(key);
+            input.min = '0';
+            td.appendChild(input);
+            buttonPlus.id = 'button-plus-one';
+            buttonPlus.className = 'flat-butt btn-xlarge half-width';
+            buttonPlus.onclick = function() {plus(this);};
+            buttonPlus.innerHTML = '+';
+            td.appendChild(buttonPlus);
+            tr.appendChild(td);
+            td = document.createElement('td');
+            td.className = 'component-td';
+            td.innerHTML = DATA[key].name;
+            tr.appendChild(td);
+            td = document.createElement('td');
+            td.innerHTML = DATA[key].type;
+            tr.appendChild(td);
+            td = document.createElement('td');
+            td.innerHTML = DATA[key].subtype;
+            tr.appendChild(td);
+            td = document.createElement('td');
+            td.innerHTML = DATA[key].rarity;
+            tr.appendChild(td);
+            td = document.createElement('td');
+            td.innerHTML = DATA[key].location;
+            tr.appendChild(td);
+            td = document.createElement('td');
+            td.innerHTML = DATA[key].missionReward;
+            tr.appendChild(td);
+            tBody.appendChild(tr);
+        }
+    }
+
+    function getStoredValue(id) {
+        var value = localStorage.getItem(id);
+        if(isNumeric(value)) {
+            return value;
+        }
+        return 0;
+    }
+
     function plus(element) {
         var id = element.id;
         var lastWord = id.split('-').pop();
@@ -112,6 +141,7 @@
         var storageFieldValue = storageField.value;
         if(isNumeric(storageFieldValue)) {
             storageField.value++;
+            localStorage.setItem(element.name, storageField.value);
         } else {
             storageField.value = 1;
         }
@@ -127,6 +157,7 @@
                 storageField.value = 0;
             } else {
                 storageField.value--;
+                localStorage.setItem(element.name, storageField.value);
             }
         } else {
             storageField.value = 0;
@@ -136,7 +167,15 @@
     function isNumeric(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     }
+
+    function storeValue(element) {
+        console.log(element);
+        var storageFieldValue = element.value;
+        if(isNumeric(storageFieldValue)) {
+            localStorage.setItem(element.name, element.value);
+        } else {
+            element.value = 0;
+        }
+    }
 </script>
-
-
 </body>

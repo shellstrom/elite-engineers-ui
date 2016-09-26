@@ -57,6 +57,10 @@
                             </table>
                             <div>
                                 <p>Total number of components: <span id="components-total"></span></p>
+                                <p>Total number of materials: <span id="materials-total"></span></p>
+                                <p>Total number of elements: <span id="elements-total"></span></p>
+                                <p>Total number of data: <span id="data-total"></span></p>
+                                <p>Total number of commodities: <span id="commodities-total"></span></p>
                                 <p>Total number of components you are missing: <span id="components-missing"></span></p>
                             </div>
                         </div>
@@ -184,6 +188,10 @@
     function updateTotals() {
         var nrOfComponents = Object.keys(DATA).length;
         var totalNrOfComponents = 0;
+        var totalNrOfMaterials = 0;
+        var totalNrOfElements = 0;
+        var totalNrOfData = 0;
+        var totalNrOfCommodities = 0;
         var totalNrOfMissingComponents = 0;
         for(var i = 0; i < nrOfComponents; i++) {
             var tr = document.createElement('tr');
@@ -191,6 +199,15 @@
             var key = Object.keys(DATA)[i];
             if(isNumeric(localStorage.getItem(key))) {
                 totalNrOfComponents += parseInt(localStorage.getItem(key));
+                if(DATA[key].type == 'Man') {
+                    totalNrOfMaterials += parseInt(localStorage.getItem(key));
+                } else if(DATA[key].type == 'Ele') {
+                    totalNrOfElements += parseInt(localStorage.getItem(key));
+                } else if(DATA[key].type == 'Data') {
+                    totalNrOfData += parseInt(localStorage.getItem(key));
+                } else if(DATA[key].type == 'Com') {
+                    totalNrOfCommodities += parseInt(localStorage.getItem(key));
+                }
             }
             if(parseInt(localStorage.getItem(key)) == 0 || localStorage.getItem(key) == null) {
                 totalNrOfMissingComponents++;
@@ -198,6 +215,10 @@
         }
 
         document.getElementById('components-total').innerHTML = ''+totalNrOfComponents;
+        document.getElementById('materials-total').innerHTML = ''+totalNrOfMaterials;
+        document.getElementById('elements-total').innerHTML = ''+totalNrOfElements;
+        document.getElementById('data-total').innerHTML = ''+totalNrOfData;
+        document.getElementById('commodities-total').innerHTML = ''+totalNrOfCommodities;
         document.getElementById('components-missing').innerHTML = ''+totalNrOfMissingComponents;
     }
 </script>

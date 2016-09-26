@@ -55,6 +55,10 @@
                                 <tbody id="components-body">
                                 </tbody>
                             </table>
+                            <div>
+                                <p>Total number of components: <span id="components-total"></span></p>
+                                <p>Total number of components you are missing: <span id="components-missing"></span></p>
+                            </div>
                         </div>
                     </div>
 
@@ -68,9 +72,9 @@
 <script>
 
     generateComponentsList();
+    updateTotals();
     function generateComponentsList() {
         var tBody = document.getElementById('components-body');
-        var components = DATA;
         var nrOfComponents = Object.keys(DATA).length;
         for(var i = 0; i < nrOfComponents; i++) {
             var tr = document.createElement('tr');
@@ -169,13 +173,32 @@
     }
 
     function storeValue(element) {
-        console.log(element);
         var storageFieldValue = element.value;
         if(isNumeric(storageFieldValue)) {
             localStorage.setItem(element.name, element.value);
         } else {
             element.value = 0;
         }
+    }
+
+    function updateTotals() {
+        var nrOfComponents = Object.keys(DATA).length;
+        var totalNrOfComponents = 0;
+        var totalNrOfMissingComponents = 0;
+        for(var i = 0; i < nrOfComponents; i++) {
+            var tr = document.createElement('tr');
+            var td = document.createElement('td');
+            var key = Object.keys(DATA)[i];
+            if(isNumeric(localStorage.getItem(key))) {
+                totalNrOfComponents += parseInt(localStorage.getItem(key));
+            }
+            if(parseInt(localStorage.getItem(key)) == 0 || localStorage.getItem(key) == null) {
+                totalNrOfMissingComponents++;
+            }
+        }
+
+        document.getElementById('components-total').innerHTML = ''+totalNrOfComponents;
+        document.getElementById('components-missing').innerHTML = ''+totalNrOfMissingComponents;
     }
 </script>
 </body>

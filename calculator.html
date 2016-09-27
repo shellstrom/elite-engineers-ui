@@ -230,13 +230,11 @@
 
     function selectShip(element) {
         var shipId = element.id;
-        console.log(shipId);
         $("#selectShipModal").modal('hide');
         getShipOutfitting(shipId);
     }
 
     function getStoredShips() {
-        //var ships = [SHIPS.name.replace(/ /g, '-').toLowerCase(), SHIPS.name, SHIPS.ship];
         var ships = new Array();
         for(var i = 0; i < SHIPS.ships.length; i++) {
             ships.push(SHIPS.ships[i].name.replace(/ /g, '-').toLowerCase());
@@ -245,7 +243,12 @@
     }
 
     function getShipOutfitting(shipId) {
+        console.log(shipId);
         var outfittingList = document.getElementById('ship-profile');
+        while(outfittingList.firstChild) {
+            outfittingList.removeChild(outfittingList.firstChild);
+            console.log('remove');
+        }
         var p = document.createElement('p');
         p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.standard.bulkheads));
         outfittingList.appendChild(p);

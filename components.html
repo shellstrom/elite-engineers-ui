@@ -91,9 +91,10 @@
             p.className = 'component-p';
             p.innerHTML = DATA[key].name;
             td.appendChild(p);
-            buttonMinus.id = 'button-minus-one';
+            buttonMinus.id = 'button-minus-one-'+key;
             buttonMinus.className = 'flat-butt btn-xlarge half-width';
             buttonMinus.onclick = function () {minus(this);};
+            buttonMinus.field = key;
             buttonMinus.innerHTML = '-';
             td.appendChild(buttonMinus);
             input.id = key;
@@ -105,9 +106,10 @@
             input.value = getStoredValue(key);
             input.min = '0';
             td.appendChild(input);
-            buttonPlus.id = 'button-plus-one';
+            buttonPlus.id = 'button-plus-one-'+key;
             buttonPlus.className = 'flat-butt btn-xlarge half-width';
             buttonPlus.onclick = function() {plus(this);};
+            buttonPlus.field = key;
             buttonPlus.innerHTML = '+';
             td.appendChild(buttonPlus);
             tr.appendChild(td);
@@ -143,29 +145,25 @@
     }
 
     function plus(element) {
-        var id = element.id;
-        var lastWord = id.split('-').pop();
-        var storageField = document.getElementById('storage-' +lastWord);
+        var storageField = element.previousSibling;
         var storageFieldValue = storageField.value;
         if(isNumeric(storageFieldValue)) {
             storageField.value++;
-            localStorage.setItem(element.name, storageField.value);
+            localStorage.setItem(storageField.name, storageField.value);
         } else {
             storageField.value = 1;
         }
     }
 
     function minus(element) {
-        var id = element.id;
-        var lastWord = id.split('-').pop();
-        var storageField = document.getElementById('storage-' +lastWord);
+        var storageField = element.nextSibling;
         var storageFieldValue = storageField.value;
         if(isNumeric(storageFieldValue)) {
             if(storageFieldValue < 1) {
                 storageField.value = 0;
             } else {
                 storageField.value--;
-                localStorage.setItem(element.name, storageField.value);
+                localStorage.setItem(storageField.name, storageField.value);
             }
         } else {
             storageField.value = 0;

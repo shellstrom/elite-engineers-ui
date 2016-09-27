@@ -11,6 +11,7 @@
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/js/bootstrap.min.js" integrity="sha384-vZ2WRJMwsjRMW/8U7i6PWi6AlO1L79snBrmgiDpgIWJ82z8eA5lenwvxbMV1PAh7" crossorigin="anonymous"></script>
 
     <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">-->
+    <script src="assets/values/ships.js" ></script>
     <link rel="stylesheet" href="css/bootstrap-glyphicons.css">
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/style.css">
@@ -44,15 +45,9 @@
                 <div class="col-lg-5 col-lg-offset-1"></div>
             </div>
             <div class="row small-top-buffer">
-                <div class="col-lg-5">
-                    <p>Stuff</p>
-                    <p>Stuff</p>
-                    <p>Stuff</p>
-                    <p>Stuff</p>
-                    <p>Stuff</p>
-                    <p></p>
+                <div id="ship-profile" class="col-lg-5">
                 </div>
-                <div class="col-lg-5 col-lg-offset-1">
+                <div id="module-upgrade" class="col-lg-5 col-lg-offset-1">
                     <p>Stuff</p>
                     <p>Stuff</p>
                     <p>Stuff</p>
@@ -156,12 +151,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="list-wrapper overflowed">
-                        <div class="list-group">
-                            <a href="#" class="list-group-item list-group-item-inverted"><button class="flat-butt pull-md-right"><span class="glyphicon glyphicon-remove"></span></button>Cras justo odio</a>
-                            <a href="#" class="list-group-item list-group-item-inverted">Dapibus ac facilisis in</a>
-                            <a href="#" class="list-group-item list-group-item-inverted">Morbi leo risus</a>
-                            <a href="#" class="list-group-item list-group-item-inverted">Porta ac consectetur ac</a>
-                            <a href="#" class="list-group-item list-group-item-inverted">Vestibulum at eros</a>
+                        <div id="stored-ships" class="list-group">
                         </div>
                     </div>
                 </div>
@@ -201,6 +191,32 @@
     </div>
 </div>
 <script>
+    addStoredShips();
+
+    function addStoredShips() {
+        var storedShips = getStoredShips();
+        console.log(storedShips);
+        for(var i = 0; i < storedShips.length; i++) {
+            var storedShipsList = document.getElementById('stored-ships');
+            var shipRow = document.createElement('a');
+            shipRow.href = '#';
+            shipRow.id = i;
+            shipRow.classList = 'list-group-item list-group-item-inverted';
+            shipRow.onclick = function () {
+                selectShip(this)
+            };
+            var shipRowContents = document.createTextNode(SHIPS.ships[i].name + ' (' + SHIPS.ships[i].ship + ')');
+            var deleteButton = document.createElement('button');
+            deleteButton.classList = 'flat-butt pull-md-right';
+            var deleteIcon = document.createElement('span');
+            deleteIcon.classList = 'glyphicon glyphicon-remove';
+            deleteButton.appendChild(deleteIcon);
+            shipRow.appendChild(deleteButton);
+            shipRow.appendChild(shipRowContents);
+            storedShipsList.appendChild(shipRow);
+        }
+    }
+
     function switchPage(element) {
         for (var i = 1; i < 6; i++) {
             var page = document.getElementById('div-page-' + i);
@@ -212,11 +228,81 @@
         }
     }
 
-    function selectShip() {
-
+    function selectShip(element) {
+        var shipId = element.id;
+        console.log(shipId);
+        $("#selectShipModal").modal('hide');
+        getShipOutfitting(shipId);
     }
 
-    $("#selectShipModal").modal('show');
+    function getStoredShips() {
+        //var ships = [SHIPS.name.replace(/ /g, '-').toLowerCase(), SHIPS.name, SHIPS.ship];
+        var ships = new Array();
+        for(var i = 0; i < SHIPS.ships.length; i++) {
+            ships.push(SHIPS.ships[i].name.replace(/ /g, '-').toLowerCase());
+        }
+        return ships;
+    }
+
+    function getShipOutfitting(shipId) {
+        var outfittingList = document.getElementById('ship-profile');
+        var p = document.createElement('p');
+        p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.standard.bulkheads));
+        outfittingList.appendChild(p);
+        p = document.createElement('p');
+        p.appendChild(document.createTextNode('Cargo Hatch'));
+        outfittingList.appendChild(p);
+        p = document.createElement('p');
+        p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.standard.powerPlant.rating + '' + SHIPS.ships[shipId].components.standard.powerPlant.class + ' Power plant'));
+        outfittingList.appendChild(p);
+        p = document.createElement('p');
+        p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.standard.thrusters.rating+''+SHIPS.ships[shipId].components.standard.thrusters.class+' Thrusters'));
+        outfittingList.appendChild(p);
+        p = document.createElement('p');
+        p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.standard.frameShiftDrive.rating + '' + SHIPS.ships[shipId].components.standard.frameShiftDrive.class + ' Frame Shift Drive'));
+        outfittingList.appendChild(p);
+        p = document.createElement('p');
+        p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.standard.lifeSupport.rating + '' + SHIPS.ships[shipId].components.standard.lifeSupport.class + ' Life support'));
+        outfittingList.appendChild(p);
+        p = document.createElement('p');
+        p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.standard.powerDistributor.rating + '' + SHIPS.ships[shipId].components.standard.powerDistributor.class + ' Power distributor'));
+        outfittingList.appendChild(p);
+        p = document.createElement('p');
+        p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.standard.sensors.rating + '' + SHIPS.ships[shipId].components.standard.sensors.class + ' Sensors'));
+        outfittingList.appendChild(p);
+        p = document.createElement('p');
+        p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.standard.fuelTank.rating + '' + SHIPS.ships[shipId].components.standard.fuelTank.class + ' Fuel tank'));
+        outfittingList.appendChild(p);
+        var hr = document.createElement('hr');
+        outfittingList.appendChild(hr);
+        for(var i = 0; i < SHIPS.ships[shipId].components.hardpoints.length; i++) {
+            if(SHIPS.ships[shipId].components.hardpoints[i] != null) {
+                p = document.createElement('p');
+                p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.hardpoints[i].rating + '' + SHIPS.ships[shipId].components.hardpoints[i].class + ' ' + SHIPS.ships[shipId].components.hardpoints[i].group));
+                outfittingList.appendChild(p);
+            }
+        }
+        hr = document.createElement('hr');
+        outfittingList.appendChild(hr);
+        for(var i = 0; i < SHIPS.ships[shipId].components.utility.length; i++) {
+            if(SHIPS.ships[shipId].components.utility[i] != null) {
+                p = document.createElement('p');
+                p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.utility[i].rating + '' + SHIPS.ships[shipId].components.utility[i].class + ' ' + SHIPS.ships[shipId].components.utility[i].group));
+                outfittingList.appendChild(p);
+            }
+        }
+        hr = document.createElement('hr');
+        outfittingList.appendChild(hr);
+        for(var i = 0; i < SHIPS.ships[shipId].components.internal.length; i++) {
+            if(SHIPS.ships[shipId].components.internal[i] != null) {
+                p = document.createElement('p');
+                p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.internal[i].rating + '' + SHIPS.ships[shipId].components.internal[i].class + ' ' + SHIPS.ships[shipId].components.internal[i].group));
+                outfittingList.appendChild(p);
+            }
+        }
+    }
+
+    //$("#selectShipModal").modal('show');
     //$("#addShipModal").modal('show');
 </script>
 </body>

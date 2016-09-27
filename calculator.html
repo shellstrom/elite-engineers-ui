@@ -40,7 +40,7 @@
             </div>
             <div class="row small-top-buffer">
                 <div class="col-lg-5 no-padding">
-                    <button class="btn-block flat-butt" type="button" data-toggle="modal" data-target="#selectShipModal">Select ship</button>
+                    <button class="btn-block flat-butt" type="button" data-toggle="modal" data-target="#selectShipModal" onclick="addStoredShips()">Select ship</button>
                 </div>
                 <div class="col-lg-5 col-lg-offset-1"></div>
             </div>
@@ -176,14 +176,14 @@
                     <div class="list-wrapper overflowed">
                         <form>
                             <fieldset class="form-group">
-                                <label for="exampleTextarea">Paste your <a href="http://coriolis.io">coriolis.io</a> ship profile here</label>
-                                <textarea class="form-control" id="exampleTextarea" rows="3"></textarea>
+                                <label for="add-ship-json">Paste your <a href="http://coriolis.io">coriolis.io</a> ship profile here</label>
+                                <textarea class="form-control" id="add-ship-json" rows="3"></textarea>
                             </fieldset>
                         </form>
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn-block flat-butt">Add ship</button>
+                    <button type="button" class="btn-block flat-butt" onclick="addAndStoreShip()">Add ship</button>
                     <button type="button" class="btn-block flat-butt" data-dismiss="modal">Close</button>
                 </div>
             </div>
@@ -191,29 +191,63 @@
     </div>
 </div>
 <script>
+
     addStoredShips();
+
+    function deleteShip(element) {
+        var shipId = element.parentElement().id;
+        console.log(shipId);
+    }
+
+    function addAndStoreShip() {
+        var jsonStr = document.getElementById('add-ship-json').value;
+        if(jsonStr != null) {
+            var obj = JSON.parse(jsonStr);
+            console.log(obj);
+            var storedShips = JSON.parse(localStorage.getItem('stored-ed-ships'));
+            if(storedShips == null) {
+                storedShips = JSON.parse('{"ships":[]}');
+            }
+            storedShips.ships.push(obj);
+            console.log(storedShips);
+            localStorage.setItem('stored-ed-ships', JSON.stringify(storedShips));
+        }
+    }
 
     function addStoredShips() {
         var storedShips = getStoredShips();
+        var storedShipsList = document.getElementById('stored-ships');
         console.log(storedShips);
-        for(var i = 0; i < storedShips.length; i++) {
-            var storedShipsList = document.getElementById('stored-ships');
-            var shipRow = document.createElement('a');
-            shipRow.href = '#';
-            shipRow.id = i;
-            shipRow.classList = 'list-group-item list-group-item-inverted';
-            shipRow.onclick = function () {
-                selectShip(this)
-            };
-            var shipRowContents = document.createTextNode(SHIPS.ships[i].name + ' (' + SHIPS.ships[i].ship + ')');
-            var deleteButton = document.createElement('button');
-            deleteButton.classList = 'flat-butt pull-md-right';
-            var deleteIcon = document.createElement('span');
-            deleteIcon.classList = 'glyphicon glyphicon-remove';
-            deleteButton.appendChild(deleteIcon);
-            shipRow.appendChild(deleteButton);
-            shipRow.appendChild(shipRowContents);
-            storedShipsList.appendChild(shipRow);
+        while(storedShipsList.firstChild) {
+            storedShipsList.removeChild(storedShipsList.firstChild);
+        }
+        if(storedShips != null) {
+            for (var i = 0; i < storedShips.ships.length; i++) {
+
+                var shipRow = document.createElement('span');
+                shipRow.href = '#';
+                shipRow.id = i;
+                shipRow.classList = 'list-group-item list-group-item-inverted';
+                shipRow.onclick = function () {
+                    selectShip(this);
+                };
+                var shipRowContents = document.createTextNode(storedShips.ships[i].name + ' (' + storedShips.ships[i].ship + ')');
+                var deleteButton = document.createElement('button');
+                deleteButton.classList = 'flat-butt pull-md-right';
+                deleteButton.zIndex = 500000;
+                deleteButton.onclick = function () {
+                    deleteShip(this);
+                };
+                var deleteIcon = document.createElement('span');
+                deleteIcon.classList = 'glyphicon glyphicon-remove';
+                deleteIcon.onclick = function () {
+                    deleteShip(this);
+                };
+                deleteButton.appendChild(deleteIcon);
+                shipRow.appendChild(deleteButton);
+                shipRow.appendChild(shipRowContents);
+                storedShipsList.appendChild(shipRow);
+            }
         }
     }
 
@@ -235,71 +269,78 @@
     }
 
     function getStoredShips() {
+        var storedShips = JSON.parse(localStorage.getItem('stored-ed-ships'));
+        console.log(storedShips);
+        return storedShips;
+    }
+
+    function getStoredShipsArray() {
+        var storedShips = JSON.parse(localStorage.getItem('stored-ed-ships'));
+        console.log(storedShips);
         var ships = new Array();
-        for(var i = 0; i < SHIPS.ships.length; i++) {
-            ships.push(SHIPS.ships[i].name.replace(/ /g, '-').toLowerCase());
+        for(var i = 0; i < storedShips.ships.length; i++) {
+            ships.push(storedShips.ships[i].name.replace(/ /g, '-').toLowerCase());
         }
         return ships;
     }
 
     function getShipOutfitting(shipId) {
-        console.log(shipId);
+        var storedShips = getStoredShips();
         var outfittingList = document.getElementById('ship-profile');
         while(outfittingList.firstChild) {
             outfittingList.removeChild(outfittingList.firstChild);
-            console.log('remove');
         }
         var p = document.createElement('p');
-        p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.standard.bulkheads));
+        p.appendChild(document.createTextNode(storedShips.ships[shipId].components.standard.bulkheads));
         outfittingList.appendChild(p);
         p = document.createElement('p');
         p.appendChild(document.createTextNode('Cargo Hatch'));
         outfittingList.appendChild(p);
         p = document.createElement('p');
-        p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.standard.powerPlant.rating + '' + SHIPS.ships[shipId].components.standard.powerPlant.class + ' Power plant'));
+        p.appendChild(document.createTextNode(storedShips.ships[shipId].components.standard.powerPlant.rating + '' + storedShips.ships[shipId].components.standard.powerPlant.class + ' Power plant'));
         outfittingList.appendChild(p);
         p = document.createElement('p');
-        p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.standard.thrusters.rating+''+SHIPS.ships[shipId].components.standard.thrusters.class+' Thrusters'));
+        p.appendChild(document.createTextNode(storedShips.ships[shipId].components.standard.thrusters.rating+''+storedShips.ships[shipId].components.standard.thrusters.class+' Thrusters'));
         outfittingList.appendChild(p);
         p = document.createElement('p');
-        p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.standard.frameShiftDrive.rating + '' + SHIPS.ships[shipId].components.standard.frameShiftDrive.class + ' Frame Shift Drive'));
+        p.appendChild(document.createTextNode(storedShips.ships[shipId].components.standard.frameShiftDrive.rating + '' + storedShips.ships[shipId].components.standard.frameShiftDrive.class + ' Frame Shift Drive'));
         outfittingList.appendChild(p);
         p = document.createElement('p');
-        p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.standard.lifeSupport.rating + '' + SHIPS.ships[shipId].components.standard.lifeSupport.class + ' Life support'));
+        p.appendChild(document.createTextNode(storedShips.ships[shipId].components.standard.lifeSupport.rating + '' + storedShips.ships[shipId].components.standard.lifeSupport.class + ' Life support'));
         outfittingList.appendChild(p);
         p = document.createElement('p');
-        p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.standard.powerDistributor.rating + '' + SHIPS.ships[shipId].components.standard.powerDistributor.class + ' Power distributor'));
+        p.appendChild(document.createTextNode(storedShips.ships[shipId].components.standard.powerDistributor.rating + '' + storedShips.ships[shipId].components.standard.powerDistributor.class + ' Power distributor'));
         outfittingList.appendChild(p);
         p = document.createElement('p');
-        p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.standard.sensors.rating + '' + SHIPS.ships[shipId].components.standard.sensors.class + ' Sensors'));
+        p.appendChild(document.createTextNode(storedShips.ships[shipId].components.standard.sensors.rating + '' + storedShips.ships[shipId].components.standard.sensors.class + ' Sensors'));
         outfittingList.appendChild(p);
         p = document.createElement('p');
-        p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.standard.fuelTank.rating + '' + SHIPS.ships[shipId].components.standard.fuelTank.class + ' Fuel tank'));
+        p.appendChild(document.createTextNode(storedShips.ships[shipId].components.standard.fuelTank.rating + '' + storedShips.ships[shipId].components.standard.fuelTank.class + ' Fuel tank'));
         outfittingList.appendChild(p);
         var hr = document.createElement('hr');
         outfittingList.appendChild(hr);
-        for(var i = 0; i < SHIPS.ships[shipId].components.hardpoints.length; i++) {
-            if(SHIPS.ships[shipId].components.hardpoints[i] != null) {
+        for(var i = 0; i < storedShips.ships[shipId].components.hardpoints.length; i++) {
+            if(storedShips.ships[shipId].components.hardpoints[i] != null) {
                 p = document.createElement('p');
-                p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.hardpoints[i].rating + '' + SHIPS.ships[shipId].components.hardpoints[i].class + ' ' + SHIPS.ships[shipId].components.hardpoints[i].group));
+                p.appendChild(document.createTextNode(storedShips.ships[shipId].components.hardpoints[i].rating + '' + storedShips.ships[shipId].components.hardpoints[i].class + ' ' + storedShips.ships[shipId].components.hardpoints[i].group));
                 outfittingList.appendChild(p);
             }
         }
         hr = document.createElement('hr');
         outfittingList.appendChild(hr);
-        for(var i = 0; i < SHIPS.ships[shipId].components.utility.length; i++) {
-            if(SHIPS.ships[shipId].components.utility[i] != null) {
+        for(var i = 0; i < storedShips.ships[shipId].components.utility.length; i++) {
+            if(storedShips.ships[shipId].components.utility[i] != null) {
                 p = document.createElement('p');
-                p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.utility[i].rating + '' + SHIPS.ships[shipId].components.utility[i].class + ' ' + SHIPS.ships[shipId].components.utility[i].group));
+                p.appendChild(document.createTextNode(storedShips.ships[shipId].components.utility[i].rating + '' + storedShips.ships[shipId].components.utility[i].class + ' ' + storedShips.ships[shipId].components.utility[i].group));
                 outfittingList.appendChild(p);
             }
         }
         hr = document.createElement('hr');
         outfittingList.appendChild(hr);
-        for(var i = 0; i < SHIPS.ships[shipId].components.internal.length; i++) {
-            if(SHIPS.ships[shipId].components.internal[i] != null) {
+        for(var i = 0; i < storedShips.ships[shipId].components.internal.length; i++) {
+            if(storedShips.ships[shipId].components.internal[i] != null) {
                 p = document.createElement('p');
-                p.appendChild(document.createTextNode(SHIPS.ships[shipId].components.internal[i].rating + '' + SHIPS.ships[shipId].components.internal[i].class + ' ' + SHIPS.ships[shipId].components.internal[i].group));
+                p.appendChild(document.createTextNode(storedShips.ships[shipId].components.internal[i].rating + '' + storedShips.ships[shipId].components.internal[i].class + ' ' + storedShips.ships[shipId].components.internal[i].group));
                 outfittingList.appendChild(p);
             }
         }

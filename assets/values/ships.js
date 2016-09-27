@@ -1,4 +1,4 @@
-SHIPS =
+storedShips =
 {
     "ships": [{
         "$schema": "http://cdn.coriolis.io/schemas/ship-loadout/3.json#",

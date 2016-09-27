@@ -177,7 +177,7 @@
                         <form>
                             <fieldset class="form-group">
                                 <label for="add-ship-json">Paste your <a href="http://coriolis.io">coriolis.io</a> ship profile here</label>
-                                <textarea class="form-control" id="add-ship-json" rows="3"></textarea>
+                                <textarea class="form-control" id="add-ship-json" rows="6"></textarea>
                             </fieldset>
                         </form>
                     </div>
@@ -191,12 +191,27 @@
     </div>
 </div>
 <script>
-
     addStoredShips();
 
     function deleteShip(element) {
-        var shipId = element.parentElement().id;
+
+        if (event.stopPropagation) {
+            // W3C standard variant
+            event.stopPropagation()
+        } else {
+            // IE variant
+            event.cancelBubble = true
+        }
+
+
+        var shipId = element.parentElement.parentElement.id;
         console.log(shipId);
+        var storedShips = getStoredShips();
+        console.log('Removing: ' +shipId);
+        storedShips.ships.splice(shipId, 1);
+        console.log(storedShips);
+        localStorage.setItem('stored-ed-ships', JSON.stringify(storedShips));
+        addStoredShips();
     }
 
     function addAndStoreShip() {
@@ -211,20 +226,23 @@
             storedShips.ships.push(obj);
             console.log(storedShips);
             localStorage.setItem('stored-ed-ships', JSON.stringify(storedShips));
+            document.getElementById('add-ship-json').value = '';
+            addStoredShips();
+            $("#addShipModal").modal('hide');
         }
     }
 
     function addStoredShips() {
         var storedShips = getStoredShips();
         var storedShipsList = document.getElementById('stored-ships');
-        console.log(storedShips);
+        //console.log(storedShips);
         while(storedShipsList.firstChild) {
             storedShipsList.removeChild(storedShipsList.firstChild);
         }
         if(storedShips != null) {
             for (var i = 0; i < storedShips.ships.length; i++) {
 
-                var shipRow = document.createElement('span');
+                var shipRow = document.createElement('a');
                 shipRow.href = '#';
                 shipRow.id = i;
                 shipRow.classList = 'list-group-item list-group-item-inverted';
@@ -263,20 +281,19 @@
     }
 
     function selectShip(element) {
-        var shipId = element.id;
+        getShipOutfitting(element.id);
         $("#selectShipModal").modal('hide');
-        getShipOutfitting(shipId);
     }
 
     function getStoredShips() {
         var storedShips = JSON.parse(localStorage.getItem('stored-ed-ships'));
-        console.log(storedShips);
+        //console.log(storedShips);
         return storedShips;
     }
 
     function getStoredShipsArray() {
         var storedShips = JSON.parse(localStorage.getItem('stored-ed-ships'));
-        console.log(storedShips);
+        //console.log(storedShips);
         var ships = new Array();
         for(var i = 0; i < storedShips.ships.length; i++) {
             ships.push(storedShips.ships[i].name.replace(/ /g, '-').toLowerCase());

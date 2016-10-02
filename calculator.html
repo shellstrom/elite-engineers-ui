@@ -400,7 +400,7 @@
                     componentTextRightElement.classList = 'component-' +grade+ '-inventory';
                     var componentTextRight = getColouredText(blueprint.recipes[grade.toString()].components[component], getStoredValue(component));
                     componentTextRightElement.appendChild(componentTextRight);
-                    var componentTextLeftNode = document.createTextNode(newText + ' (' +grade+ ')');
+                    var componentTextLeftNode = document.createTextNode(newText + ' (' +blueprint.recipes[grade.toString()].components[component]+ ')');
                     componentTextLeftElement.appendChild(componentTextLeftNode);
 
                     recipeComponentsRowElement.appendChild(componentTextLeftElement);

@@ -13,11 +13,13 @@
     <!--<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.2/css/bootstrap.min.css" integrity="sha384-y3tfxAZXuh4HwSYylfB+J125MxIs6mR5FOHamPBG064zB+AFeWH94NdvaCBm8qnd" crossorigin="anonymous">-->
     <script src="assets/values/ships.js" ></script>
     <script src="assets/values/recipes.js" ></script>
+    <script src="assets/values/components.js" ></script>
     <link rel="stylesheet" href="css/bootstrap-glyphicons.css">
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/engineer-profile.css">
     <link rel="stylesheet" href="css/calculator.css">
+    <link rel="stylesheet" href="css/components-extension.css">
 </head>
 <body>
 <div class="container-fluid">
@@ -119,33 +121,45 @@
             <div class="orange-header white panel"><h6>CHOSEN BLUEPRINTS</h6></div>
             <div id="chosen-blueprints">
                 <div id="blueprint-amounts">
-                    <div class="row">
-                        <div class="col-md-10">Title (Grade)</div><div class="">[-] 1 [+]</div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="div-page-3" class="row large-top-buffer removed">
+        <div data-reactroot="">
+            <div class="container-fluid">
+                <div class="row">
+                    <div id="content-column">
                         <div class="row">
-                            <div class="col-md-11 col-lg-offset-1">
-                                <div class="row">
-                                    <div class="component-1">Component 1 (2)</div>
-                                    <div class="component-1-inventory col-lg-offset-11">2</div>
-                                    <div class="component-2">Component 2 (2)</div>
-                                    <div class="component-1-inventory col-lg-offset-11">2</div>
-                                    <div class="component-3">Component 3 (4)</div>
-                                    <div class="component-1-inventory col-lg-offset-11 red">2</div>
-                                    <div class="component-4">Component 4 (2)</div>
-                                    <div class="component-1-inventory col-lg-offset-11">2</div>
+                            <div class="col-md-12">
+                                <table id="component-table" class="table">
+                                    <thead>
+                                    <tr>
+                                        <th>Personal stock</th>
+                                        <th>Component</th>
+                                        <th>Type</th>
+                                        <th>Subtype</th>
+                                        <th>Rarity</th>
+                                        <th>Location</th>
+                                        <th>Mission reward</th>
+                                    </tr>
+                                    </thead>
+                                    <tbody id="components-body">
+                                    </tbody>
+                                </table>
+                                <div>
+                                    <p>Total number of components: <span id="components-total"></span></p>
+                                    <p>Total number of materials: <span id="materials-total"></span></p>
+                                    <p>Total number of elements: <span id="elements-total"></span></p>
+                                    <p>Total number of data: <span id="data-total"></span></p>
+                                    <p>Total number of commodities: <span id="commodities-total"></span></p>
+                                    <p>Total number of components you are missing: <span id="components-missing"></span></p>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-        </div>
-    </div>
-    <div id="div-page-3" class="row large-top-buffer removed">
-        <div id="content-left-3" class="col-lg-5">
-            <p>Page 3</p>
-        </div>
-        <div id="content-right-3" class="col-lg-7">
-            <p>Page 3</p>
         </div>
     </div>
     <div id="div-page-4" class="row large-top-buffer removed">
@@ -216,9 +230,11 @@
     </div>
 </div>
 <script>
+    generateComponentsList();
+    updateTotals();
     addStoredShips();
     //addStoredRecipes();
-    addRecipes();
+    addAvailableBluePrints();
 
     function deleteShip(element) {
 
@@ -290,7 +306,7 @@
         }
     }
 
-    function addRecipes() {
+    function addAvailableBluePrints() {
         var blueprints = getBlueprints();
         //console.log(blueprints);
         //console.log(Object.keys(blueprints).length);
@@ -300,7 +316,6 @@
         var blueprintsKeys = Object.keys(blueprints);
         blueprintsKeys.sort();
         //console.log(blueprintsKeys);
-
         for(var i = 0; i < blueprintsKeys.length; i++) {
             //console.log(blueprintsKeys[i]);
             if(blueprints.hasOwnProperty(blueprintsKeys[i])) {
@@ -310,8 +325,6 @@
                 var counter = 1;
                 for(var ii = 1; ii < Object.keys(blueprints[blueprintsKeys[i]].recipes).length+1; ii++) {
                     if(blueprints[blueprintsKeys[i]].recipes[ii] !== null) {
-                        var components = Object.keys(blueprints[blueprintsKeys[i]].recipes[ii.toString()].components);
-
                         var pElement = document.createElement('p');
                         var textElement = document.createTextNode(blueprintModuleName);
                         var recipeRowElement = document.createElement('div');
@@ -327,53 +340,82 @@
                         recipeComponentsRowElement.classList = 'row recipeComponentsRowElement';
                         recipeComponentElement.classList = 'col-md-11 col-lg-offset-1';
                         pElement.id = blueprintsKeys[i]+ '-' +counter;
+                        pElement.onclick = function () {addRecipe(this);};
                         pElement.appendChild(textElement);
                         textElement = document.createTextNode(' - ' +blueprintName+ ' -');
                         pElement.appendChild(textElement);
                         textElement = document.createTextNode(' (' +counter+ ')');
                         pElement.appendChild(textElement);
                         availableBlueprints.appendChild(pElement);
-                        recipeRowElement.appendChild(recipeRowTitleElement);
-                        for(var component in blueprints[blueprintsKeys[i]].recipes[ii.toString()].components) {
-                            if(blueprints[blueprintsKeys[i]].recipes[ii.toString()].components.hasOwnProperty(component)) {
-                                //console.log(blueprints[blueprintsKeys[i]].recipes[ii.toString()].components[component]);
-                                //console.log('Component: ' +component+ ' Amount: ' +blueprints[blueprintsKeys[i]].recipes[ii.toString()].components[component]);
-                                //console.log('You inventory: ' +component+ ' Amount: ' +getStoredValue(component));
-                                var text = component.split('-');
-
-                                var newText = '';
-                                for(var iii = 0; iii < text.length; iii++) {
-                                    newText += text[iii].charAt(0).toUpperCase() + text[iii].slice(1);
-                                }
-                                var componentTextLeftElement = document.createElement('div');;
-                                componentTextLeftElement.classList = 'component-' +ii+ ' col-lg-11';
-                                var componentTextRightElement = document.createElement('div');;
-                                componentTextRightElement.classList = 'component-' +ii+ '-inventory';
-                                var componentTextRight = getColouredText(blueprints[blueprintsKeys[i]].recipes[ii.toString()].components[component], getStoredValue(component));
-                                //var componentTextRightNode = document.createTextNode(componentTextRight);
-                                componentTextRightElement.appendChild(componentTextRight);
-                                var componentTextLeftNode = document.createTextNode(newText + ' (' +ii+ ')');
-                                componentTextLeftElement.appendChild(componentTextLeftNode);
-
-                                recipeComponentsRowElement.appendChild(componentTextLeftElement);
-                                recipeComponentsRowElement.appendChild(componentTextRightElement);
-
-                                //console.log(componentTextLeftElement + componentTextRightElement);
-                            }
-                        }
-                        recipeComponentElement.appendChild(recipeComponentsRowElement);
-                        recipeComponentRowElement.appendChild(recipeComponentElement);
-                        recipeRowElement.appendChild(recipeComponentRowElement);
-                        blueprintAmounts.appendChild(recipeRowElement);
                         counter++;
-
-
-                        //console.log(components);
-                        //console.log(blueprints[blueprint].recipes[i.toString()]);
                     }
                 }
             }
         }
+    };
+
+    function addRecipe(element) {
+        var blueprints = getBlueprints();
+        var blueprintId = element.id;
+        var split = blueprintId.split('-');
+        blueprintId = split.slice(0, split.length - 1).join('-');
+        var grade = split[split.length-1];
+        var blueprintAmounts = document.getElementById('blueprint-amounts');
+        var blueprintsKeys = Object.keys(blueprints);
+        blueprintsKeys.sort();
+
+        var blueprint;
+        if(blueprints.hasOwnProperty(blueprintId)) {
+            blueprint = blueprints[blueprintId];
+        }
+
+        if(blueprint.recipes[grade] !== null) {
+            var blueprintModuleName = blueprint.module;
+            var recipeRowElement = document.createElement('div');
+            recipeRowElement.id = 'chosen-' +blueprintId+ '-' +grade;
+            recipeRowElement.onclick = function() {removeRecipe(this)};
+            recipeRowElement.classList = 'row recipeRowElement small-top-padding';
+            var recipeRowTitleElement = document.createElement('div');
+            recipeRowTitleElement.classList = 'col-md-10';
+            var recipeRowTitleText = document.createTextNode(blueprintId+ ' (' +grade+ ')');
+            recipeRowTitleElement.appendChild(recipeRowTitleText);
+            var recipeComponentRowElement = document.createElement('div');
+            recipeComponentRowElement.classList = 'row recipeComponentRowElement';
+            var recipeComponentElement = document.createElement('div');
+            var recipeComponentsRowElement = document.createElement('div');
+            recipeComponentsRowElement.classList = 'row recipeComponentsRowElement';
+            recipeComponentElement.classList = 'col-md-11 col-lg-offset-1';
+            recipeRowElement.appendChild(recipeRowTitleElement);
+            for(var component in blueprint.recipes[grade.toString()].components) {
+                if(blueprint.recipes[grade.toString()].components.hasOwnProperty(component)) {
+                    var text = component.split('-');
+
+                    var newText = '';
+                    for(var iii = 0; iii < text.length; iii++) {
+                        newText += text[iii].charAt(0).toUpperCase() + text[iii].slice(1);
+                    }
+                    var componentTextLeftElement = document.createElement('div');
+                    componentTextLeftElement.classList = 'component-' +grade+ ' col-lg-11';
+                    var componentTextRightElement = document.createElement('div');
+                    componentTextRightElement.classList = 'component-' +grade+ '-inventory';
+                    var componentTextRight = getColouredText(blueprint.recipes[grade.toString()].components[component], getStoredValue(component));
+                    componentTextRightElement.appendChild(componentTextRight);
+                    var componentTextLeftNode = document.createTextNode(newText + ' (' +grade+ ')');
+                    componentTextLeftElement.appendChild(componentTextLeftNode);
+
+                    recipeComponentsRowElement.appendChild(componentTextLeftElement);
+                    recipeComponentsRowElement.appendChild(componentTextRightElement);
+                }
+            }
+            recipeComponentElement.appendChild(recipeComponentsRowElement);
+            recipeComponentRowElement.appendChild(recipeComponentElement);
+            recipeRowElement.appendChild(recipeComponentRowElement);
+            blueprintAmounts.appendChild(recipeRowElement);
+        }
+    }
+
+    function removeRecipe(element) {
+        element.remove();
     }
 
     function getColouredText(requirement, inventory) {
@@ -489,6 +531,185 @@
         }
     }
 
+    function generateComponentsList() {
+        var tBody = document.getElementById('components-body');
+        var nrOfComponents = Object.keys(DATA).length;
+        for(var i = 0; i < nrOfComponents; i++) {
+            var tr = document.createElement('tr');
+            var td = document.createElement('td');
+            var key = Object.keys(DATA)[i];
+            var p = document.createElement('p');
+            var buttonMinus = document.createElement('button');
+            var input = document.createElement('input');
+            var buttonPlus = document.createElement('button');
+            p.className = 'component-p';
+            p.innerHTML = DATA[key].name;
+            td.appendChild(p);
+            buttonMinus.id = 'button-minus-one-'+key;
+            buttonMinus.className = 'flat-butt btn-xlarge half-width';
+            buttonMinus.onclick = function () {minus(this);};
+            buttonMinus.field = key;
+            buttonMinus.innerHTML = '-';
+            td.appendChild(buttonMinus);
+            input.id = key;
+            input.name = key;
+            input.onkeyup = function() { storeValue(this)};
+            input.onchange = function() { storeValue(this)};
+            input.className = 'form-control form-orange';
+            input.type = 'number';
+            input.value = getStoredValue(key);
+            input.min = '0';
+            td.appendChild(input);
+            buttonPlus.id = 'button-plus-one-'+key;
+            buttonPlus.className = 'flat-butt btn-xlarge half-width';
+            buttonPlus.onclick = function() {plus(this);};
+            buttonPlus.field = key;
+            buttonPlus.innerHTML = '+';
+            td.appendChild(buttonPlus);
+            tr.appendChild(td);
+            td = document.createElement('td');
+            td.className = 'component-td';
+            td.innerHTML = DATA[key].name;
+            tr.appendChild(td);
+            td = document.createElement('td');
+            td.innerHTML = DATA[key].type;
+            tr.appendChild(td);
+            td = document.createElement('td');
+            td.innerHTML = DATA[key].subtype;
+            tr.appendChild(td);
+            td = document.createElement('td');
+            td.innerHTML = getGlyphRarities(DATA[key].rarity);
+            tr.appendChild(td);
+            td = document.createElement('td');
+            td.innerHTML = DATA[key].location;
+            tr.appendChild(td);
+            td = document.createElement('td');
+            td.innerHTML = DATA[key].missionReward;
+            tr.appendChild(td);
+            tBody.appendChild(tr);
+        }
+    }
+
+    function getStoredValue(id) {
+        var value = localStorage.getItem(id);
+        if(isNumeric(value)) {
+            return value;
+        }
+        return 0;
+    }
+
+    function plus(element) {
+        var storageField = element.previousSibling;
+        var storageFieldValue = storageField.value;
+        if(isNumeric(storageFieldValue)) {
+            storageField.value++;
+            localStorage.setItem(storageField.name, storageField.value);
+        } else {
+            storageField.value = 1;
+        }
+    }
+
+    function minus(element) {
+        var storageField = element.nextSibling;
+        var storageFieldValue = storageField.value;
+        if(isNumeric(storageFieldValue)) {
+            if(storageFieldValue < 1) {
+                storageField.value = 0;
+            } else {
+                storageField.value--;
+                localStorage.setItem(storageField.name, storageField.value);
+            }
+        } else {
+            storageField.value = 0;
+        }
+    }
+
+    function isNumeric(n) {
+        return !isNaN(parseFloat(n)) && isFinite(n);
+    }
+
+    function storeValue(element) {
+        var storageFieldValue = element.value;
+        if(isNumeric(storageFieldValue)) {
+            localStorage.setItem(element.name, element.value);
+        } else {
+            element.value = 0;
+        }
+    }
+
+    function updateTotals() {
+        var nrOfComponents = Object.keys(DATA).length;
+        var totalNrOfComponents = 0;
+        var totalNrOfMaterials = 0;
+        var totalNrOfElements = 0;
+        var totalNrOfData = 0;
+        var totalNrOfCommodities = 0;
+        var totalNrOfMissingComponents = 0;
+        for(var i = 0; i < nrOfComponents; i++) {
+            var tr = document.createElement('tr');
+            var td = document.createElement('td');
+            var key = Object.keys(DATA)[i];
+            if(isNumeric(localStorage.getItem(key))) {
+                totalNrOfComponents += parseInt(localStorage.getItem(key));
+                if(DATA[key].type == 'Man') {
+                    totalNrOfMaterials += parseInt(localStorage.getItem(key));
+                } else if(DATA[key].type == 'Ele') {
+                    totalNrOfElements += parseInt(localStorage.getItem(key));
+                } else if(DATA[key].type == 'Data') {
+                    totalNrOfData += parseInt(localStorage.getItem(key));
+                } else if(DATA[key].type == 'Com') {
+                    totalNrOfCommodities += parseInt(localStorage.getItem(key));
+                }
+            }
+            if(parseInt(localStorage.getItem(key)) == 0 || localStorage.getItem(key) == null) {
+                totalNrOfMissingComponents++;
+            }
+        }
+
+        document.getElementById('components-total').innerHTML = ''+totalNrOfComponents;
+        document.getElementById('materials-total').innerHTML = ''+totalNrOfMaterials;
+        document.getElementById('elements-total').innerHTML = ''+totalNrOfElements;
+        document.getElementById('data-total').innerHTML = ''+totalNrOfData;
+        document.getElementById('commodities-total').innerHTML = ''+totalNrOfCommodities;
+        document.getElementById('components-missing').innerHTML = ''+totalNrOfMissingComponents;
+    }
+
+    function getGlyphNuts(nutz) {
+        var spanElement = document.createElement('span');
+        var spanElementText = document.createTextNode(nutz);
+        spanElement.appendChild(spanElementText);
+        if(inventory < requirement) {
+            spanElement.classList = 'red';
+        } else if(inventory > requirement) {
+            spanElement.classList = 'blue';
+        }
+        return spanElement;
+    }
+
+    function getGlyphRarities(number) {
+        var spanElement = document.createElement('span');
+        switch(number) {
+            case 1:
+                spanElement.className = 'rarity-leaf-1';
+                break;
+            case 2:
+                spanElement.className = 'rarity-leaf-2';
+                break;
+            case 3:
+                spanElement.className = 'rarity-leaf-3';
+                break;
+            case 4:
+                spanElement.className = 'rarity-leaf-4';
+                break;
+            default:
+                var spanElementText = document.createTextNode(number);
+                spanElement.appendChild(spanElementText);
+                break;
+        }
+        return spanElement.outerHTML;
+    }
+
+    /*
     function getStoredValue(id) {
         var value = localStorage.getItem(id);
         if(isNumeric(value)) {
@@ -500,6 +721,7 @@
     function isNumeric(n) {
         return !isNaN(parseFloat(n)) && isFinite(n);
     }
+    */
     //$("#selectShipModal").modal('show');
     //$("#addShipModal").modal('show');
 </script>

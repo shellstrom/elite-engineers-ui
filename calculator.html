@@ -230,11 +230,18 @@
     </div>
 </div>
 <script>
+    var storedAvailableBlueprints;
+    var storedChosenBlueprints;
+
+    getStoredAvailableBlueprints();
+    getStoredChosenBlueprints();
+    addAvailableBluePrints();
+
     generateComponentsList();
     updateTotals();
     addStoredShips();
     //addStoredRecipes();
-    addAvailableBluePrints();
+
 
     function deleteShip(element) {
 
@@ -306,11 +313,25 @@
         }
     }
 
+    function getStoredAvailableBlueprints() {
+        storedAvailableBlueprints = JSON.parse(localStorage.getItem('available-blueprints'));
+    }
+
+    function getStoredChosenBlueprints() {
+        storedChosenBlueprints = JSON.parse(localStorage.getItem('stored-blueprints'));
+    }
+
     function addAvailableBluePrints() {
-        var blueprints = getBlueprints();
+        var blueprints;
+        if(storedAvailableBlueprints != null) {
+            blueprints = storedAvailableBlueprints;
+        } else {
+            blueprints = getBlueprints();
+        }
         //console.log(blueprints);
         //console.log(Object.keys(blueprints).length);
         var availableBlueprints = document.getElementById('available-blueprints');
+        while(availa)
         var blueprintAmounts = document.getElementById('blueprint-amounts');
 
         var blueprintsKeys = Object.keys(blueprints);
@@ -340,7 +361,7 @@
                         recipeComponentsRowElement.classList = 'row recipeComponentsRowElement';
                         recipeComponentElement.classList = 'col-md-11 col-lg-offset-1';
                         pElement.id = blueprintsKeys[i]+ '-' +counter;
-                        pElement.onclick = function () {addRecipe(this);};
+                        pElement.onclick = function () {addBluePrint(this);};
                         pElement.appendChild(textElement);
                         textElement = document.createTextNode(' - ' +blueprintName+ ' -');
                         pElement.appendChild(textElement);
@@ -354,7 +375,7 @@
         }
     };
 
-    function addRecipe(element) {
+    function addBluePrint(element) {
         var blueprints = getBlueprints();
         var blueprintId = element.id;
         var split = blueprintId.split('-');
@@ -373,7 +394,7 @@
             var blueprintModuleName = blueprint.module;
             var recipeRowElement = document.createElement('div');
             recipeRowElement.id = 'chosen-' +blueprintId+ '-' +grade;
-            recipeRowElement.onclick = function() {removeRecipe(this)};
+            recipeRowElement.onclick = function() {removeBlueprint(this)};
             recipeRowElement.classList = 'row recipeRowElement small-top-padding';
             var recipeRowTitleElement = document.createElement('div');
             recipeRowTitleElement.classList = 'col-md-10';
@@ -412,9 +433,11 @@
             recipeRowElement.appendChild(recipeComponentRowElement);
             blueprintAmounts.appendChild(recipeRowElement);
         }
+
+
     }
 
-    function removeRecipe(element) {
+    function removeBlueprint(element) {
         element.remove();
     }
 

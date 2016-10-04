@@ -51,7 +51,7 @@
                 <div id="ship-profile" class="col-lg-5">
                 </div>
                 <div id="module-upgrade" class="col-lg-5 col-lg-offset-1">
-                    <p>Stuff</p>
+                    <p id='fsd-increased-fsd-range-5' onclick='applyEffect(this)'>FSD G5</p>
                     <p>Stuff</p>
                     <p>Stuff</p>
                     <p>Stuff</p>
@@ -70,42 +70,8 @@
                     <th>Roll Max</th>
                 </tr>
                 </thead>
-                <tbody>
-                <tr>
-                    <td class="no-top-border">Max Jump Range</td>
-                    <td>22.57</td>
-                    <td><span class="red">24.82</span></td>
-                    <td>29.34</td>
-                    <td><span class="blue">32.72</span></td>
-                </tr>
-                <tr>
-                    <td class="no-top-border">Full Tank Jump Range</td>
-                    <td>19.88</td>
-                    <td><span class="red">21.86</span></td>
-                    <td>25.84</td>
-                    <td><span class="blue">28.82</span></td>
-                </tr>
-                <tr>
-                    <td class="no-top-border">Laden Jump Range</td>
-                    <td>17.26</b></td>
-                    <td><span class="red">21.86</span></td>
-                    <td>22.43</td>
-                    <td><span class="blue">25.02</span></td>
-                </tr>
-                <tr>
-                    <td class="no-top-border">Mass Unladen</td>
-                    <td>89</td>
-                    <td><span class="red">97.9</span></td>
-                    <td>115.7</td>
-                    <td><span class="blue">129.05</span></td>
-                </tr>
-                <tr>
-                    <td class="no-top-border">Power Draw</td>
-                    <td>19</td>
-                    <td><span class="red">20.9</span></td>
-                    <td>24.7</td>
-                    <td><span class="blue">27.55</span></td>
-                </tr>
+                <tbody id="stats">
+                <td>Select a ship...</td>
                 </tbody>
             </table>
         </div>
@@ -413,7 +379,7 @@
             if(storedChosenBlueprints === undefined) {
                 return;
             }
-            console.log(storedChosenBlueprints);
+            //console.log(storedChosenBlueprints);
             //blueprintsKeys.sort();
 
             for(var i = 0; i < Object.keys(blueprints).length; i++) {
@@ -421,7 +387,7 @@
                 if(blueprint === undefined) {
                     continue;
                 }
-                console.log(blueprint);
+                //console.log(blueprint);
                 var blueprintId = blueprintsKeys[i].toString();
                 var blueprintModuleName = blueprint.module;
                 var recipeRowElement = document.createElement('div');
@@ -673,6 +639,94 @@
                 p.appendChild(document.createTextNode(storedShips.ships[shipId].components.internal[i].rating + '' + storedShips.ships[shipId].components.internal[i].class + ' ' + storedShips.ships[shipId].components.internal[i].group));
                 outfittingList.appendChild(p);
             }
+        }
+
+        addShipStats(storedShips, shipId);
+    }
+
+    function applyEffect(element) {
+        var allBlueprints = BLUEPRINTS;
+        var split = element.id.split("-");
+        var blueprint = split.slice(0, split.length - 1).join("-");
+        var grade = element.id.split(/[-]+/).pop();
+
+
+        if(blueprint !== null) {
+            var chosenRecipe = JSON.parse(JSON.stringify(allBlueprints[blueprint.toString()].recipes[grade.toString()]));
+        }
+    }
+
+    function addShipStats(storedShips, shipId) {
+        removeChildren('stats');
+        addStatsRow('Base Armour', storedShips.ships[shipId].stats.baseArmour.toString());
+        addStatsRow('Armour', storedShips.ships[shipId].stats.armour.toString());
+        addStatsRow('Base Shield Strength', storedShips.ships[shipId].stats.baseShieldStrength.toString());
+        addStatsRow('Shield Strength', storedShips.ships[shipId].stats.shieldStrength.toString());
+        addStatsRow('Hull Mass', storedShips.ships[shipId].stats.hullMass.toString());
+        addStatsRow('Unladen Mass', storedShips.ships[shipId].stats.unladenMass.toString());
+        addStatsRow('Laden Mass', storedShips.ships[shipId].stats.ladenMass.toString());
+        addStatsRow('Power Available', storedShips.ships[shipId].stats.powerAvailable.toString());
+        addStatsRow('Power Retracted', storedShips.ships[shipId].stats.powerRetracted.toString());
+        addStatsRow('Power Deployed', storedShips.ships[shipId].stats.powerDeployed.toString());
+        addStatsRow('Unladen range', storedShips.ships[shipId].stats.unladenRange.toString());
+        addStatsRow('Full Tank Range', storedShips.ships[shipId].stats.fullTankRange.toString());
+        addStatsRow('Laden range', storedShips.ships[shipId].stats.ladenRange.toString());
+        addStatsRow('Speed', storedShips.ships[shipId].stats.speed.toString());
+        addStatsRow('Boost', storedShips.ships[shipId].stats.boost.toString());
+        addStatsRow('Top Speed', storedShips.ships[shipId].stats.topSpeed.toString());
+        addStatsRow('Top Boost', storedShips.ships[shipId].stats.topBoost.toString());
+    }
+
+    function addStatsRow(stat, value) {
+        var statsElement = document.getElementById('stats');
+
+        var textElement = document.createTextNode(stat);
+        var trElement = document.createElement('tr');
+        var tdElement = document.createElement('td');
+        tdElement.classList = 'no-top-border';
+        tdElement.appendChild(textElement);
+        trElement.appendChild(tdElement);
+
+        tdElement = document.createElement('td');
+        tdElement.classList = '';
+        textElement = document.createTextNode(value);
+        tdElement.appendChild(textElement);
+        trElement.appendChild(tdElement);
+
+        tdElement = document.createElement('td');
+        tdElement.classList = 'red';
+        textElement = document.createTextNode('--');
+        tdElement.appendChild(textElement);
+        trElement.appendChild(tdElement);
+
+        tdElement = document.createElement('td');
+        textElement = document.createTextNode('--');
+        tdElement.appendChild(textElement);
+        trElement.appendChild(tdElement);
+        tdElement.classList = 'blue';
+
+        tdElement = document.createElement('td');
+        textElement = document.createTextNode('--');
+        tdElement.appendChild(textElement);
+        trElement.appendChild(tdElement);
+        statsElement.appendChild(trElement);
+    }
+
+    function removeChildren(parentId) {
+        var parent = document.getElementById(parentId);
+        while(parent.firstChild) {
+            parent.removeChild(parent.firstChild);
+        }
+    }
+
+    function getNiceStringFromModule(module) {
+        switch(module) {
+            case 'frameShiftDrive':
+                return 'Frame Shift Drive';
+                break;
+            default:
+                return 'sag a* knows';
+                break;
         }
     }
 

@@ -32,7 +32,7 @@
             <button id="page-1" class="flat-butt" onclick="switchPage(this)">Calculator</button>
             <button id="page-2" class="flat-butt" onclick="switchPage(this)">Blueprints</button>
             <button id="page-3" class="flat-butt" onclick="switchPage(this)">Inventory</button>
-            <button id="page-4" class="flat-butt" onclick="switchPage(this)">Page 4</button>
+            <button id="page-4" class="flat-butt" onclick="switchPage(this)">Shopping list</button>
             <button id="page-5" class="flat-butt" onclick="switchPage(this)">Page 5</button>
         </div>
     </div>
@@ -131,10 +131,30 @@
     </div>
     <div id="div-page-4" class="row large-top-buffer removed">
         <div id="content-left-4" class="col-lg-5">
-            <p>Page 4</p>
-        </div>
-        <div id="content-right-4" class="col-lg-7">
-            <p>Page 4</p>
+            <div data-reactroot="">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>Use this list to keep track on what you're missing in terms of inventory to meet the quotas for your chosen mod Blueprints</p>
+                                    <table id="shoppinglist-table" class="table">
+                                        <thead>
+                                        <tr>
+                                            <th>Personal stock</th>
+                                            <th>Component</th>
+                                            <th>Still needed</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody id="shoppinglist-body">
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
     <div id="div-page-5" class="row large-top-buffer removed">
@@ -209,6 +229,10 @@
     updateTotals();
     addStoredShips();
     //addStoredRecipes();
+
+    generateShoppingList();
+
+
     if(localStorage.getItem('eeui-page') !== null) {
         selectPage(localStorage.getItem('eeui-page'));
     }
@@ -636,6 +660,13 @@
         for (var i = 1; i < 6; i++) {
             var page = document.getElementById('div-page-' + i);
             if (i == element.id.substr(5)) {
+                switch(i) {
+                    case 4:
+                        generateShoppingList();
+                        break;
+                    default:
+                        break;
+                }
                 page.className = page.className.replace(/(?:^|\s)removed(?!\S)/g, '');
                 localStorage.setItem('eeui-page', i);
             } else {
@@ -919,6 +950,101 @@
                 return 'sag a* knows';
                 break;
         }
+    }
+
+    function generateShoppingList(sortBy) {
+        var shoppingListBody = document.getElementById('shoppinglist-body');
+        while(shoppingListBody.firstChild) {
+            shoppingListBody.removeChild(shoppingListBody.firstChild);
+        }
+        var allBlueprints = getBlueprints();
+        var componentName;
+        var nrOfComponentsRequired;
+        var nrOfComponentsStored;
+        var sortedItems = [];
+        var shoppingList = {};
+        if(getStoredChosenBlueprints() !== null) {
+            var blueprints = getStoredChosenBlueprints();
+            var blueprintsKeys = Object.keys(blueprints);
+            if (blueprints === undefined) {
+                return;
+            }
+
+            var shoppingList = {};
+            for (var i = 0; i < Object.keys(blueprints).length; i++) {
+                var blueprint = blueprints[blueprintsKeys[i]];
+                if (blueprint === undefined) {
+                    continue;
+                }
+                var blueprintId = blueprintsKeys[i].toString();
+                var text = allBlueprints[blueprintId].name;
+                for (var ii = 1; ii < 6; ii++) {
+                    var grade = blueprint.recipes[ii.toString()];
+                    if (grade === undefined) {
+                        continue;
+                    }
+
+
+                    var newShoppingItem = {};
+                    for (var component in blueprint.recipes[ii.toString()].components) {
+                        if (blueprint.recipes[ii.toString()].components.hasOwnProperty(component)) {
+                            var componentName = '';
+                            text = component.split('-');
+                            for (var iii = 0; iii < text.length; iii++) {
+                                if (iii == 0) {
+                                    componentName += text[iii].charAt(0).toUpperCase() + text[iii].slice(1);
+                                } else {
+                                    componentName += ' ' + text[iii].charAt(0).toUpperCase() + text[iii].slice(1);
+                                }
+
+                            }
+                            nrOfComponentsRequired = blueprint.recipes[ii.toString()].components[component];
+                            nrOfComponentsStored = getStoredValue(component);
+
+                            newShoppingItem[componentName] = {};
+                            if (typeof shoppingList[componentName] != "undefined") {
+                                shoppingList[componentName]['required-components'] += parseInt(nrOfComponentsRequired);
+                            } else {
+                                newShoppingItem[componentName]['required-components'] = parseInt(nrOfComponentsRequired);
+                            }
+                            newShoppingItem[componentName]['stored-components'] = parseInt(nrOfComponentsStored);
+                            shoppingList = extend({}, shoppingList, newShoppingItem);
+                        }
+                    }
+                }
+            }
+
+            for(var i = 0; i < Object.keys(shoppingList).length; i++) {
+                var stillNeeded = shoppingList[Object.keys(shoppingList)[i]]['required-components'] - shoppingList[Object.keys(shoppingList)[i]]['stored-components'];
+                var name = Object.keys(shoppingList)[i];
+
+                sortedItems[name] = stillNeeded;
+            }
+
+            var components = Object.keys(shoppingList);
+            for(i = 0; i < components.length; i++) {
+                var trElement = document.createElement('tr');
+                var tdElement = document.createElement('td');
+                var text = document.createTextNode(shoppingList[components[i]]['stored-components']);
+                tdElement.appendChild(text);
+                trElement.appendChild(tdElement);
+                text = document.createTextNode(components[i]);
+                tdElement = document.createElement('td');
+                tdElement.appendChild(text);
+                trElement.appendChild(tdElement);
+                text = document.createTextNode((shoppingList[components[i]]['required-components'] - shoppingList[components[i]]['stored-components']).toString());
+                tdElement = document.createElement('td');
+                tdElement.appendChild(text);
+                trElement.appendChild(tdElement);
+                shoppingListBody.appendChild(trElement);
+            }
+            console.log(shoppingList);
+        }
+    }
+
+    function sortFunction(obj) {
+        var keys = []; for(var key in obj) keys.push(key);
+        return keys.sort(function(a,b){return obj[a]-obj[b]});
     }
 
     function generateComponentsList() {

@@ -1014,25 +1014,32 @@
                 }
             }
 
+
             for(var i = 0; i < Object.keys(shoppingList).length; i++) {
+                var required = shoppingList[Object.keys(shoppingList)[i]]['required-components'];
+                var stored = shoppingList[Object.keys(shoppingList)[i]]['stored-components'];
                 var stillNeeded = shoppingList[Object.keys(shoppingList)[i]]['required-components'] - shoppingList[Object.keys(shoppingList)[i]]['stored-components'];
                 var name = Object.keys(shoppingList)[i];
 
-                sortedItems[name] = stillNeeded;
+                sortedItems[i] = {'name': name, 'stillNeeded': stillNeeded, 'required': required, 'stored': stored};
             }
 
+            sortedItems.sort(function(a, b) {
+               return b.stillNeeded- a.stillNeeded;
+            });
+
             var components = Object.keys(shoppingList);
-            for(i = 0; i < components.length; i++) {
+            for(i = 0; i < sortedItems.length; i++) {
                 var trElement = document.createElement('tr');
                 var tdElement = document.createElement('td');
-                var text = document.createTextNode(shoppingList[components[i]]['stored-components']);
+                var text = document.createTextNode(sortedItems[i].stored);
                 tdElement.appendChild(text);
                 trElement.appendChild(tdElement);
-                text = document.createTextNode(components[i]);
+                text = document.createTextNode(sortedItems[i].name);
                 tdElement = document.createElement('td');
                 tdElement.appendChild(text);
                 trElement.appendChild(tdElement);
-                text = document.createTextNode((shoppingList[components[i]]['required-components'] - shoppingList[components[i]]['stored-components']).toString());
+                text = document.createTextNode(sortedItems[i].stillNeeded);
                 tdElement = document.createElement('td');
                 tdElement.appendChild(text);
                 trElement.appendChild(tdElement);

@@ -14,6 +14,7 @@
     <script src="assets/values/ships.js" ></script>
     <script src="assets/values/blueprints.js" ></script>
     <script src="assets/values/components.js" ></script>
+    <script src="assets/values/fsd.js" ></script>
     <link rel="stylesheet" href="css/bootstrap-glyphicons.css">
     <link rel="stylesheet" href="css/bootstrap.css">
     <link rel="stylesheet" href="css/style.css">
@@ -208,7 +209,9 @@
     updateTotals();
     addStoredShips();
     //addStoredRecipes();
-
+    if(localStorage.getItem('eeui-page') !== null) {
+        selectPage(localStorage.getItem('eeui-page'));
+    }
 
     function deleteShip(element) {
 
@@ -618,15 +621,28 @@
         return spanElement;
     }
 
-    function switchPage(element) {
+    function selectPage(pageId) {
         for (var i = 1; i < 6; i++) {
             var page = document.getElementById('div-page-' + i);
-            if (i == element.id.substr(5)) {
+            if (i == pageId) {
                 page.className = page.className.replace(/(?:^|\s)removed(?!\S)/g, '');
             } else {
                 page.className += " removed";
             }
         }
+    }
+
+    function switchPage(element) {
+        for (var i = 1; i < 6; i++) {
+            var page = document.getElementById('div-page-' + i);
+            if (i == element.id.substr(5)) {
+                page.className = page.className.replace(/(?:^|\s)removed(?!\S)/g, '');
+                localStorage.setItem('eeui-page', i);
+            } else {
+                page.className += " removed";
+            }
+        }
+
     }
 
     function selectShip(element) {
@@ -717,20 +733,60 @@
                 outfittingList.appendChild(p);
             }
         }
-
+        localStorage.setItem('eeui-selected-ship',shipId);
         addShipStats(storedShips, shipId);
     }
 
     function applyEffect(element) {
+        var storedShips = getStoredShips();
         var allBlueprints = BLUEPRINTS;
         var split = element.id.split("-");
         var blueprint = split.slice(0, split.length - 1).join("-");
         var grade = element.id.split(/[-]+/).pop();
+        var shipId = getStoredShip();
 
+        var o = getOptimisedMass(storedShips.ships[shipId].components.standard.frameShiftDrive.class, storedShips.ships[shipId].components.standard.frameShiftDrive.rating);
+        var f = getMaxFuelPerJump(storedShips.ships[shipId].components.standard.frameShiftDrive.class, storedShips.ships[shipId].components.standard.frameShiftDrive.rating);
+        var m = storedShips.ships[shipId].stats.hullMass;
+        var r = FSD_RATINGS[storedShips.ships[shipId].components.standard.frameShiftDrive.rating];
+        var c = FSD_CLASSES[storedShips.ships[shipId].components.standard.frameShiftDrive.class];
+
+        // Calculates the max range per jump
+        var d=(o/m)*Math.pow(1000*f/r,(1/c));
 
         if(blueprint !== null) {
             var chosenRecipe = JSON.parse(JSON.stringify(allBlueprints[blueprint.toString()].recipes[grade.toString()]));
         }
+    }
+
+    function getOptimisedMass(theClass, theRating) {
+        for(var i = 0; i < FSD.length; i++) {
+            if(FSD[i][0] == theClass && FSD[i][1] == theRating) {
+                return FSD[i][5];
+            }
+        }
+    }
+
+    function getMaxFuelPerJump(theClass, theRating) {
+        for(var i = 0; i < FSD.length; i++) {
+            if(FSD[i][0] == theClass && FSD[i][1] == theRating) {
+                return FSD[i][6];
+            }
+        }
+    }
+
+    function getMaxJumpRange(shipId) {
+        var storedShips = getStoredShips();
+
+        var o = getOptimisedMass(storedShips.ships[shipId].components.standard.frameShiftDrive.class, storedShips.ships[shipId].components.standard.frameShiftDrive.rating);
+        var f = getMaxFuelPerJump(storedShips.ships[shipId].components.standard.frameShiftDrive.class, storedShips.ships[shipId].components.standard.frameShiftDrive.rating);
+        var m = storedShips.ships[shipId].stats.hullMass;
+        var r = FSD_RATINGS[storedShips.ships[shipId].components.standard.frameShiftDrive.rating];
+        var c = FSD_CLASSES[storedShips.ships[shipId].components.standard.frameShiftDrive.class];
+
+        // Calculates the max range per jump
+        var d=(o/m)*Math.pow(1000*f/r,(1/c));
+        return d;
     }
 
     function addShipStats(storedShips, shipId) {
@@ -752,6 +808,64 @@
         addStatsRow('Boost', storedShips.ships[shipId].stats.boost.toString());
         addStatsRow('Top Speed', storedShips.ships[shipId].stats.topSpeed.toString());
         addStatsRow('Top Boost', storedShips.ships[shipId].stats.topBoost.toString());
+    }
+
+    function getTotalMass(shipId) {
+        var storedShips = getStoredShips();
+        var totalMass = 0;
+        storedShips.ships[shipId].components.standard.bulkheads;
+        outfittingList.appendChild(p);
+        p = document.createElement('p');
+        p.appendChild(document.createTextNode('Cargo Hatch'));
+        outfittingList.appendChild(p);
+        p = document.createElement('p');
+        p.appendChild(document.createTextNode(storedShips.ships[shipId].components.standard.powerPlant.rating + '' + storedShips.ships[shipId].components.standard.powerPlant.class + ' Power plant'));
+        outfittingList.appendChild(p);
+        p = document.createElement('p');
+        p.appendChild(document.createTextNode(storedShips.ships[shipId].components.standard.thrusters.rating+''+storedShips.ships[shipId].components.standard.thrusters.class+' Thrusters'));
+        outfittingList.appendChild(p);
+        p = document.createElement('p');
+        p.appendChild(document.createTextNode(storedShips.ships[shipId].components.standard.frameShiftDrive.rating + '' + storedShips.ships[shipId].components.standard.frameShiftDrive.class + ' Frame Shift Drive'));
+        outfittingList.appendChild(p);
+        p = document.createElement('p');
+        p.appendChild(document.createTextNode(storedShips.ships[shipId].components.standard.lifeSupport.rating + '' + storedShips.ships[shipId].components.standard.lifeSupport.class + ' Life support'));
+        outfittingList.appendChild(p);
+        p = document.createElement('p');
+        p.appendChild(document.createTextNode(storedShips.ships[shipId].components.standard.powerDistributor.rating + '' + storedShips.ships[shipId].components.standard.powerDistributor.class + ' Power distributor'));
+        outfittingList.appendChild(p);
+        p = document.createElement('p');
+        p.appendChild(document.createTextNode(storedShips.ships[shipId].components.standard.sensors.rating + '' + storedShips.ships[shipId].components.standard.sensors.class + ' Sensors'));
+        outfittingList.appendChild(p);
+        p = document.createElement('p');
+        p.appendChild(document.createTextNode(storedShips.ships[shipId].components.standard.fuelTank.rating + '' + storedShips.ships[shipId].components.standard.fuelTank.class + ' Fuel tank'));
+        outfittingList.appendChild(p);
+        var hr = document.createElement('hr');
+        outfittingList.appendChild(hr);
+        for(var i = 0; i < storedShips.ships[shipId].components.hardpoints.length; i++) {
+            if(storedShips.ships[shipId].components.hardpoints[i] != null) {
+                p = document.createElement('p');
+                p.appendChild(document.createTextNode(storedShips.ships[shipId].components.hardpoints[i].rating + '' + storedShips.ships[shipId].components.hardpoints[i].class + ' ' + storedShips.ships[shipId].components.hardpoints[i].group));
+                outfittingList.appendChild(p);
+            }
+        }
+        hr = document.createElement('hr');
+        outfittingList.appendChild(hr);
+        for(var i = 0; i < storedShips.ships[shipId].components.utility.length; i++) {
+            if(storedShips.ships[shipId].components.utility[i] != null) {
+                p = document.createElement('p');
+                p.appendChild(document.createTextNode(storedShips.ships[shipId].components.utility[i].rating + '' + storedShips.ships[shipId].components.utility[i].class + ' ' + storedShips.ships[shipId].components.utility[i].group));
+                outfittingList.appendChild(p);
+            }
+        }
+        hr = document.createElement('hr');
+        outfittingList.appendChild(hr);
+        for(var i = 0; i < storedShips.ships[shipId].components.internal.length; i++) {
+            if(storedShips.ships[shipId].components.internal[i] != null) {
+                p = document.createElement('p');
+                p.appendChild(document.createTextNode(storedShips.ships[shipId].components.internal[i].rating + '' + storedShips.ships[shipId].components.internal[i].class + ' ' + storedShips.ships[shipId].components.internal[i].group));
+                outfittingList.appendChild(p);
+            }
+        }
     }
 
     function addStatsRow(stat, value) {
@@ -863,6 +977,14 @@
             td.innerHTML = DATA[key].missionReward;
             tr.appendChild(td);
             tBody.appendChild(tr);
+        }
+    }
+
+    function getStoredShip() {
+        if(localStorage.getItem('eeui-selected-ship') != null) {
+            return localStorage.getItem('eeui-selected-ship');
+        } else {
+            return null;
         }
     }
 

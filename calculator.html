@@ -402,6 +402,7 @@
         var allBlueprints = getBlueprints();
         var blueprints;
         var chosenBlueprints = getStoredChosenBlueprints();
+        var storedInventory = getStoredInventory();
         if(getStoredChosenBlueprints() !== null) {
             var blueprintAmounts = document.getElementById('blueprint-amounts');
 
@@ -484,7 +485,7 @@
                             componentTextLeftElement.classList = 'component-' + grade + ' col-lg-11';
                             var componentTextRightElement = document.createElement('div');
                             componentTextRightElement.classList = 'component-' + i + '-inventory';
-                            var componentTextRight = getColouredText(blueprint.recipes[ii.toString()].components[component], getStoredValue(component));
+                            var componentTextRight = getColouredText(blueprint.recipes[ii.toString()].components[component], getStoredValue(storedInventory[component]));
                             componentTextRightElement.appendChild(componentTextRight);
                             var componentTextLeftNode = document.createTextNode(newText + ' (' + blueprint.recipes[ii.toString()].components[component] + ')');
                             componentTextLeftElement.appendChild(componentTextLeftNode);
@@ -509,6 +510,7 @@
     function addBlueprint(element) {
         var allBlueprints = BLUEPRINTS;
         var blueprints;
+        var storedInventory = getStoredInventory();
         if(getStoredAvailableBlueprints() !== null) {
             blueprints = getStoredAvailableBlueprints();
         } else {
@@ -563,7 +565,7 @@
                     componentTextLeftElement.classList = 'component-' +grade+ ' col-lg-11';
                     var componentTextRightElement = document.createElement('div');
                     componentTextRightElement.classList = 'component-' +grade+ '-inventory';
-                    var componentTextRight = getColouredText(blueprint.recipes[grade.toString()].components[component], getStoredValue(component));
+                    var componentTextRight = getColouredText(blueprint.recipes[grade.toString()].components[component], getStoredValue(storedInventory[component]));
                     componentTextRightElement.appendChild(componentTextRight);
                     var componentTextLeftNode = document.createTextNode(newText + ' (' +blueprint.recipes[grade.toString()].components[component]+ ')');
                     componentTextLeftElement.appendChild(componentTextLeftNode);
@@ -954,6 +956,7 @@
 
     function generateShoppingList(sortBy) {
         var shoppingListBody = document.getElementById('shoppinglist-body');
+        var storedInventory = getStoredInventory();
         while(shoppingListBody.firstChild) {
             shoppingListBody.removeChild(shoppingListBody.firstChild);
         }
@@ -999,7 +1002,7 @@
 
                             }
                             nrOfComponentsRequired = blueprint.recipes[ii.toString()].components[component];
-                            nrOfComponentsStored = getStoredValue(component);
+                            nrOfComponentsStored = getStoredValue(storedInventory[component]);
 
                             newShoppingItem[componentName] = {};
                             if (typeof shoppingList[componentName] != "undefined") {
@@ -1198,19 +1201,20 @@
             var tr = document.createElement('tr');
             var td = document.createElement('td');
             var key = Object.keys(DATA)[i];
-            if(isNumeric(localStorage.getItem(key))) {
-                totalNrOfComponents += parseInt(localStorage.getItem(key));
+            var storedInventory = getStoredInventory();
+            if(isNumeric(storedInventory[key])) {
+                totalNrOfComponents += parseInt(storedInventory[key]);
                 if(DATA[key].type == 'Man') {
-                    totalNrOfMaterials += parseInt(localStorage.getItem(key));
+                    totalNrOfMaterials += parseInt(storedInventory[key]);
                 } else if(DATA[key].type == 'Ele') {
-                    totalNrOfElements += parseInt(localStorage.getItem(key));
+                    totalNrOfElements += parseInt(storedInventory[key]);
                 } else if(DATA[key].type == 'Data') {
-                    totalNrOfData += parseInt(localStorage.getItem(key));
+                    totalNrOfData += parseInt(storedInventory[key]);
                 } else if(DATA[key].type == 'Com') {
-                    totalNrOfCommodities += parseInt(localStorage.getItem(key));
+                    totalNrOfCommodities += parseInt(storedInventory[key]);
                 }
             }
-            if(parseInt(localStorage.getItem(key)) == 0 || localStorage.getItem(key) == null) {
+            if(parseInt(storedInventory[key]) == 0 || storedInventory[key] == null) {
                 totalNrOfMissingComponents++;
             }
         }

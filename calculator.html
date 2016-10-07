@@ -225,7 +225,7 @@
     addAvailableBluePrints();
     addChosenBlueprints();
 
-    generateComponentsList();
+    generateInventoryList();
     updateTotals();
     addStoredShips();
     //addStoredRecipes();
@@ -1054,8 +1054,9 @@
         return keys.sort(function(a,b){return obj[a]-obj[b]});
     }
 
-    function generateComponentsList() {
+    function generateInventoryList() {
         var tBody = document.getElementById('components-body');
+        var storedInventory = getStoredInventory();
         var nrOfComponents = Object.keys(DATA).length;
         for(var i = 0; i < nrOfComponents; i++) {
             var tr = document.createElement('tr');
@@ -1080,7 +1081,7 @@
             input.onchange = function() { storeValue(this)};
             input.className = 'form-control form-orange';
             input.type = 'number';
-            input.value = getStoredValue(key);
+            input.value = getStoredValue(storedInventory[key]);
             input.min = '0';
             td.appendChild(input);
             buttonPlus.id = 'button-plus-one-'+key;
@@ -1121,8 +1122,7 @@
         }
     }
 
-    function getStoredValue(id) {
-        var value = localStorage.getItem(id);
+    function getStoredValue(value) {
         if(isNumeric(value)) {
             return value;
         }
@@ -1159,10 +1159,27 @@
         return !isNaN(parseFloat(n)) && isFinite(n);
     }
 
+    function getStoredInventory() {
+        var storedInventory = JSON.parse(localStorage.getItem('eeui-inventory'));
+        if(storedInventory != undefined) {
+            return storedInventory;
+        } else {
+            return {}
+        }
+    }
+
     function storeValue(element) {
         var storageFieldValue = element.value;
         if(isNumeric(storageFieldValue)) {
-            localStorage.setItem(element.name, element.value);
+            var storedInventory = getStoredInventory();
+            var inventory = {};
+            inventory[element.name] = element.value;
+            if(storedInventory !== undefined) {
+                var merged = extend({}, storedInventory, inventory);
+                localStorage.setItem('eeui-inventory', JSON.stringify(merged));
+            } else {
+                localStorage.setItem('eeui-inventory', JSON.stringify(inventory));
+            }
         } else {
             element.value = 0;
         }

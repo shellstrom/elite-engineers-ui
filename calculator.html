@@ -222,8 +222,8 @@
 
     //addBlueprints();
 
-    addAvailableBluePrints();
-    addChosenBlueprints();
+    generateAvailableBluePrints();
+    generateChosenBlueprints();
 
     generateComponentsList();
     updateTotals();
@@ -329,10 +329,10 @@
         while(chosenBlueprintsElement.firstChild) {
             chosenBlueprintsElement.removeChild(chosenBlueprintsElement.firstChild);
         }
-        addAvailableBluePrints();
+        generateAvailableBluePrints();
     }
 
-    function addAvailableBluePrints() {
+    function generateAvailableBluePrints() {
         var blueprints;
         if(getStoredAvailableBlueprints() !== null) {
             blueprints = getStoredAvailableBlueprints();
@@ -359,46 +359,33 @@
                 //console.log(blueprints[blueprintsKeys[i]]);
                 var blueprintName = blueprints[blueprintsKeys[i]].name;
                 var blueprintModuleName = blueprints[blueprintsKeys[i]].module;
-                var counter = 1;
+                var counter = 0;
+                var pElement = document.createElement('p');
+                pElement.id = blueprintsKeys[i];
+
+                var textElement = document.createTextNode(blueprintModuleName);
+                pElement.appendChild(textElement);
+                textElement = document.createTextNode(' - ' +blueprintName+ ' ');
+                pElement.appendChild(textElement);
+                var brElement = document.createElement('br');
+                pElement.appendChild(brElement);
+                var enabledGlyphs = [];
                 for(var ii = 1; ii < 6; ii++) {
                     var value = JSON.stringify(blueprints[blueprintsKeys[i]].recipes[ii.toString()]);
                     if(blueprints[blueprintsKeys[i]].recipes.hasOwnProperty(ii.toString())) {
-                        var pElement = document.createElement('p');
-
-                        var recipeRowElement = document.createElement('div');
-                        recipeRowElement.classList = 'row recipeRowElement small-top-padding';
-                        var recipeRowTitleElement = document.createElement('div');
-                        recipeRowTitleElement.classList = 'col-md-10';
-                        var recipeRowTitleText = document.createTextNode(blueprintsKeys[i]+ ' (' +ii+ ')');
-                        recipeRowTitleElement.appendChild(recipeRowTitleText);
-                        var recipeComponentRowElement = document.createElement('div');
-                        recipeComponentRowElement.classList = 'row recipeComponentRowElement';
-                        var recipeComponentElement = document.createElement('div');
-                        var recipeComponentsRowElement = document.createElement('div');
-                        recipeComponentsRowElement.classList = 'row recipeComponentsRowElement';
-                        recipeComponentElement.classList = 'col-md-11 col-lg-offset-1';
-
-                        pElement.id = blueprintsKeys[i]+ '-' +ii;
-                        pElement.onclick = function () {addBlueprint(this);};
-
-                        var textElement = document.createTextNode(blueprintModuleName);
-                        pElement.appendChild(textElement);
-                        textElement = document.createTextNode(' - ' +blueprintName+ ' ');
-                        pElement.appendChild(textElement);
-                        var brElement = document.createElement('br');
-                        pElement.appendChild(brElement);
-                        getGlyphNuts(pElement, ii);
-                        //textElement = document.createTextNode(' (' +ii+ ')');
-                        //pElement.appendChild(textElement);
-                        availableBlueprints.appendChild(pElement);
                         counter++;
+                        enabledGlyphs[ii] = '';
+                    } else {
+                        enabledGlyphs[ii] = 'darken';
                     }
                 }
+                getGlyphNuts(pElement, counter, enabledGlyphs);
+                availableBlueprints.appendChild(pElement);
             }
         }
     };
 
-    function addChosenBlueprints() {
+    function generateChosenBlueprints() {
         var allBlueprints = getBlueprints();
         var blueprints;
         var chosenBlueprints = getStoredChosenBlueprints();
@@ -460,7 +447,7 @@
                     var text = allBlueprints[blueprintId].name;
                     var recipeRowTitleText = document.createTextNode(text);
                     recipeRowTitleElement.appendChild(recipeRowTitleText);
-                    getGlyphNuts(recipeRowTitleElement, ii);
+                    getGlyphNuts(recipeRowTitleElement, ii, null);
                     var recipeComponentRowElement = document.createElement('div');
                     recipeComponentRowElement.classList = 'row recipeComponentRowElement';
                     var recipeComponentElement = document.createElement('div');
@@ -506,7 +493,8 @@
         }
     }
 
-    function addBlueprint(element) {
+    function toggleBlueprint(element) {
+
         var allBlueprints = BLUEPRINTS;
         var blueprints;
         if(getStoredAvailableBlueprints() !== null) {
@@ -538,7 +526,7 @@
             var text = allBlueprints[blueprintId].name;
             var recipeRowTitleText = document.createTextNode(text);
             recipeRowTitleElement.appendChild(recipeRowTitleText);
-            getGlyphNuts(recipeRowTitleElement, grade);
+            getGlyphNuts(recipeRowTitleElement, parseInt(grade), null);
 
             var recipeComponentRowElement = document.createElement('div');
             recipeComponentRowElement.classList = 'row recipeComponentRowElement';
@@ -595,10 +583,18 @@
         chosenBlueprints[blueprintId]['recipes'][chosenGrade] = chosenRecipe;
         var aMerge = extend({}, storedChosenBlueprints, chosenBlueprints);
         //console.log(aMerge);
-        delete blueprints[blueprintId].recipes[grade.toString()];
+        //delete blueprints[blueprintId].recipes[grade.toString()];
+        console.log(element.onclick);
+        //element.onclick = function() { return false };
+        if(element.classList.contains('darken')) {
+            element.classList.remove('darken');
+        } else {
+            element.classList.add('darken');
+        }
+
         setStoredChosenBlueprints(aMerge);
         setStoredAvailableBlueprints(blueprints);
-        addAvailableBluePrints();
+        //generateAvailableBluePrints();
     }
 
     function removeBlueprint(element) {
@@ -630,7 +626,7 @@
         setStoredChosenBlueprints(storedChosenBlueprints);
         setStoredAvailableBlueprints(merged);
         element.remove();
-        addAvailableBluePrints();
+        generateAvailableBluePrints();
     }
 
     function getColouredText(requirement, inventory) {
@@ -1166,7 +1162,7 @@
         } else {
             element.value = 0;
         }
-        addChosenBlueprints();
+        generateChosenBlueprints();
     }
 
     function updateTotals() {
@@ -1206,10 +1202,17 @@
         document.getElementById('components-missing').innerHTML = ''+totalNrOfMissingComponents;
     }
 
-    function getGlyphNuts(element, nutz) {
-        for(var i = 0; i < nutz; i++) {
+    function getGlyphNuts(element, nutz, glyphsEnabled) {
+        for(var i = 1; i < nutz+1; i++) {
             var spanElement = document.createElement('span');
-            spanElement.classList = 'glyph-nut';
+            spanElement.id = element.id +'-'+i;
+            spanElement.classList.add('glyph-nut');
+            if(glyphsEnabled != null) {
+                if(glyphsEnabled[i] == 'darken') {
+                    spanElement.classList.add(glyphsEnabled[i]);
+                }
+            }
+            spanElement.onclick = function () {toggleBlueprint(this);};
             element.appendChild(spanElement);
         }
         //return glyphs;
@@ -1253,21 +1256,6 @@
         }
         return target;
     }
-    /*
-    function getStoredValue(id) {
-        var value = localStorage.getItem(id);
-        if(isNumeric(value)) {
-            return value;
-        }
-        return 0;
-    }
-
-    function isNumeric(n) {
-        return !isNaN(parseFloat(n)) && isFinite(n);
-    }
-    */
-    //$("#selectShipModal").modal('show');
-    //$("#addShipModal").modal('show');
 </script>
 </body>
 </html>

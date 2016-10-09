@@ -7,6 +7,7 @@ body {
     font-family: Michroma;
     background: #1b1b1b;
     color: darkorange;
+    text-transform: uppercase;
 }
 
 body .container-fluid {

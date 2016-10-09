@@ -1,13 +1,13 @@
 @font-face {
-    font-family: Michroma;
-    src: url(../assets/fonts/michroma.ttf);
+    font-family: Eurostile;
+    src: url(../assets/fonts/eurocaps.ttf);
 }
 
 body {
-    font-family: Michroma;
+    font-family: Eurostile;
     background: #1b1b1b;
     color: darkorange;
-    text-transform: uppercase;
+    
 }
 
 body .container-fluid {

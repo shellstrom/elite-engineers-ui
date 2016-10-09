@@ -318,9 +318,9 @@ var BLUEPRINTS =
             },
             "5": {
                 "components": {
-                    "strange-wake-solutions": 2,
-                    "chemical-manipulators": 2,
-                    "polonium": 2,
+                    "datamined-wake-exceptions": 1,
+                    "chemical-manipulators": 1,
+                    "arsenic": 1,
                     "magnetic-emitter-coil": 1
                 },
                 "effects": {
@@ -1999,9 +1999,8 @@ var BLUEPRINTS =
             "4": {
                 "components": {
                     "heat-dispersion-plate": 1,
-                    "conductive-ceramics": 2,
-                    "cadmium": 2,
-                    "pharmaceutical-isolators": 1,
+                    "conductive-ceramics": 1,
+                    "cadmium": 1,
                     "energy-grid-assembly": 1
                 },
                 "effects": {
@@ -8655,9 +8654,8 @@ var BLUEPRINTS =
             "3": {
                 "components": {
                     "grid-resistors": 1,
-                    "modified-consumer-firmware": 2,
+                    "modified-consumer-firmware": 1,
                     "chemical-distillery": 2,
-                    "refined-focus-crystals": 1,
                     "praseodymium": 1
                 },
                 "effects": {

@@ -38,6 +38,12 @@ body {
     width: 18px;
     height: 21px;
     margin-left: 0.2rem;
+    vertical-align: middle;
+}
+
+.remove-button {
+    margin-right: 5px;
+    vertical-align: middle;
 }
 
 .specialisation-glyphs img {

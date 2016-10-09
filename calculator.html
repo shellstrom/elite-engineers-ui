@@ -444,7 +444,7 @@
                     closeButton.onclick = function () {removeBlueprint(recipeRowElement)};
                     closeButton.classList = 'glyphicon glyphicon-remove remove-button';
                     var recipeRowTitleElement = document.createElement('div');
-                    recipeRowTitleElement.classList = 'col-md-10';
+                    recipeRowTitleElement.classList = 'col-md-11';
 
                     grade = blueprint.recipes[ii.toString()];
                     if(grade === undefined) {
@@ -456,6 +456,11 @@
                     var recipeRowTitleText = document.createTextNode(text);
                     recipeRowTitleElement.appendChild(recipeRowTitleText);
                     getGlyphNuts(CHOSEN, recipeRowTitleElement, ii, null);
+                    var appliedBlueprintElementButton = document.createElement('span');
+                    appliedBlueprintElementButton.onclick = function() {appliedBlueprint(blueprintId, ii)};
+                    appliedBlueprintElementButton.classList = 'glyphicon glyphicon-ok ok-button';
+                    recipeRowTitleElement.appendChild(appliedBlueprintElementButton);
+
                     var recipeComponentRowElement = document.createElement('div');
                     recipeComponentRowElement.classList = 'row recipeComponentRowElement';
                     var recipeComponentElement = document.createElement('div');
@@ -538,13 +543,17 @@
                 closeButton.onclick = function () {removeBlueprint(recipeRowElement)};
                 closeButton.classList = 'glyphicon glyphicon-remove remove-button';
                 var recipeRowTitleElement = document.createElement('div');
-                recipeRowTitleElement.classList = 'col-md-10';
+                recipeRowTitleElement.classList = 'col-md-11';
 
                 var text = allBlueprints[blueprintId].name;
                 recipeRowTitleElement.appendChild(closeButton);
                 var recipeRowTitleText = document.createTextNode(text);
                 recipeRowTitleElement.appendChild(recipeRowTitleText);
                 getGlyphNuts(source, recipeRowTitleElement, parseInt(grade), null);
+                var appliedBlueprintElementButton = document.createElement('span');
+                appliedBlueprintElementButton.onclick = function() {appliedBlueprint(blueprintId, grade)};
+                appliedBlueprintElementButton.classList = 'glyphicon glyphicon-ok ok-button';
+                recipeRowTitleElement.appendChild(appliedBlueprintElementButton);
 
                 var recipeComponentRowElement = document.createElement('div');
                 recipeComponentRowElement.classList = 'row recipeComponentRowElement';
@@ -619,6 +628,21 @@
             element.classList.remove('darken');
         } else {
             element.classList.add('darken');
+        }
+    }
+
+    function appliedBlueprint(blueprintId, grade) {
+        var allBlueprints = BLUEPRINTS;
+        var storedInventory = getStoredInventory();
+        var blueprintRecipe = allBlueprints[blueprintId].recipes[grade].components;
+        var blueprintRecipeNames = Object.keys(blueprintRecipe);
+        for(var i = 0; i < blueprintRecipeNames.length; i++) {
+            if(storedInventory[blueprintRecipeNames[i]] != undefined && storedInventory[blueprintRecipeNames[i]] > 0) {
+                var recipeValue = blueprintRecipe[blueprintRecipeNames[i]];
+                storedInventory[blueprintRecipeNames[i]] -= recipeValue;
+            } else {
+                break;
+            }
         }
     }
 

@@ -412,25 +412,10 @@
                     continue;
                 }
                 //console.log(blueprint);
-                var blueprintId = blueprintsKeys[i].toString();
+                const blueprintId = blueprintsKeys[i].toString();
                 var blueprintModuleName = blueprint.module;
+                for(var ii = 1; ii < 6; ii++) {
 
-                /*
-                for(var ii = 1; ii < 6; ii++) {
-                    var grade = blueprint.recipes[ii.toString()];
-                    if (grade === undefined) {
-                        continue;
-                    } else {
-                        grade = ii;
-                    }
-                }
-                recipeRowElement.id = 'chosen-' +blueprintId+ '-' +grade;
-                recipeRowElement.onclick = function () {removeBlueprint(this)};
-                recipeRowElement.classList = 'row recipeRowElement small-top-padding';
-                var recipeRowTitleElement = document.createElement('div');
-                recipeRowTitleElement.classList = 'col-md-10';
-                */
-                for(var ii = 1; ii < 6; ii++) {
                     var grade = blueprint.recipes[ii.toString()];
                     if (grade === undefined) {
                         continue;
@@ -450,14 +435,16 @@
                     if(grade === undefined) {
                         continue;
                     }
-
+                    //TODO Why does this work fo immuting?
+                    const number = ii;
                     var text = allBlueprints[blueprintId].name;
                     recipeRowTitleElement.appendChild(closeButton);
                     var recipeRowTitleText = document.createTextNode(text);
                     recipeRowTitleElement.appendChild(recipeRowTitleText);
                     getGlyphNuts(CHOSEN, recipeRowTitleElement, ii, null);
                     var appliedBlueprintElementButton = document.createElement('span');
-                    appliedBlueprintElementButton.onclick = function() {appliedBlueprint(blueprintId, ii)};
+                    appliedBlueprintElementButton.id = blueprintId+'-'+ii;
+                    appliedBlueprintElementButton.onclick = function() {appliedBlueprint(blueprintId, number)};
                     appliedBlueprintElementButton.classList = 'glyphicon glyphicon-ok ok-button';
                     recipeRowTitleElement.appendChild(appliedBlueprintElementButton);
 
@@ -637,13 +624,15 @@
         var blueprintRecipe = allBlueprints[blueprintId].recipes[grade].components;
         var blueprintRecipeNames = Object.keys(blueprintRecipe);
         for(var i = 0; i < blueprintRecipeNames.length; i++) {
-            if(storedInventory[blueprintRecipeNames[i]] != undefined && storedInventory[blueprintRecipeNames[i]] > 0) {
+            if(storedInventory[blueprintRecipeNames[i]] != undefined && storedInventory[blueprintRecipeNames[i]] >= blueprintRecipe[blueprintRecipeNames[i]]) {
                 var recipeValue = blueprintRecipe[blueprintRecipeNames[i]];
                 storedInventory[blueprintRecipeNames[i]] -= recipeValue;
             } else {
                 break;
             }
         }
+        setStoredInventory(storedInventory);
+        generateChosenBlueprints();
     }
 
     function removeBlueprint(element) {
@@ -706,6 +695,9 @@
             var page = document.getElementById('div-page-' + i);
             if (i == element.id.substr(5)) {
                 switch(i) {
+                    case 3:
+                        generateInventoryList();
+                        break;
                     case 4:
                         generateShoppingList();
                         break;
@@ -1101,6 +1093,7 @@
     }
 
     function generateInventoryList() {
+        removeChildren('components-body');
         var tBody = document.getElementById('components-body');
         var storedInventory = getStoredInventory();
         var nrOfComponents = Object.keys(DATA).length;
@@ -1238,6 +1231,10 @@
         } else {
             return {}
         }
+    }
+
+    function setStoredInventory(inventory) {
+        localStorage.setItem('eeui-inventory', JSON.stringify(inventory));
     }
 
     function storeValue(element) {

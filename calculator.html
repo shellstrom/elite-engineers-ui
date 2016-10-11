@@ -99,6 +99,16 @@
                     <div id="content-column">
                         <div class="row">
                             <div class="col-md-12">
+                                <div class="col-md-3">
+                                <select class="form-orange" id="component-filter">
+                                    <option name="empty" value="empty">None</option>
+                                    <option name="Com" value="Com">Commodity</option>
+                                    <option name="Data" value="Data">Data</option>
+                                    <option name="Ele" value="Ele">Element</option>
+                                    <option name="Man" value="Man">Manufactured</option>
+                                    <option name="Man" value="Ele-Man">Ele-Man</option>
+                                </select>
+                                </div>
                                 <table id="component-table" class="table">
                                     <thead>
                                     <tr>
@@ -224,6 +234,10 @@
     const AVAILABLE = 'available';
     const CHOSEN = 'chosen';
     const DARKEN = 'darken';
+    const FILTER_TYPE_COMMODITY = 'Com';
+    const FILTER_TYPE_DATA = 'Data';
+    const FILTER_TYPE_ELEMENT = 'Ele';
+    const FILTER_TYPE_MANUFACTURED = 'Man';
 
     generateAvailableBluePrints();
     generateChosenBlueprints();
@@ -235,6 +249,8 @@
 
     generateShoppingList();
 
+
+    document.getElementById('component-filter').onchange = function() {filterInventory(this.value)};
 
     if(localStorage.getItem('eeui-page') !== null) {
         selectPage(localStorage.getItem('eeui-page'));
@@ -1010,64 +1026,88 @@
         return keys.sort(function(a,b){return obj[a]-obj[b]});
     }
 
-    function generateInventoryList() {
+    function generateInventoryList(filteredInventory) {
         removeChildren('components-body');
         var tBody = document.getElementById('components-body');
-        var storedInventory = getStoredInventory();
-        var nrOfComponents = Object.keys(DATA).length;
-        for(var i = 0; i < nrOfComponents; i++) {
-            var tr = document.createElement('tr');
-            var td = document.createElement('td');
-            var key = Object.keys(DATA)[i];
-            var p = document.createElement('p');
-            var buttonMinus = document.createElement('button');
-            var input = document.createElement('input');
-            var buttonPlus = document.createElement('button');
-            p.className = 'component-p';
-            p.innerHTML = DATA[key].name;
-            td.appendChild(p);
-            buttonMinus.id = 'button-minus-one-'+key;
-            buttonMinus.className = 'flat-butt btn-xlarge half-width';
-            buttonMinus.onclick = function () {minus(this);};
-            buttonMinus.field = key;
-            buttonMinus.innerHTML = '-';
-            td.appendChild(buttonMinus);
-            input.id = key;
-            input.name = key;
-            input.onkeyup = function() { storeValue(this)};
-            input.onchange = function() { storeValue(this)};
-            input.className = 'form-control form-orange';
-            input.type = 'number';
-            input.value = getStoredValue(storedInventory[key]);
-            input.min = '0';
-            td.appendChild(input);
-            buttonPlus.id = 'button-plus-one-'+key;
-            buttonPlus.className = 'flat-butt btn-xlarge half-width';
-            buttonPlus.onclick = function() {plus(this);};
-            buttonPlus.field = key;
-            buttonPlus.innerHTML = '+';
-            td.appendChild(buttonPlus);
-            tr.appendChild(td);
-            td = document.createElement('td');
-            td.className = 'component-td';
-            td.innerHTML = DATA[key].name;
-            tr.appendChild(td);
-            td = document.createElement('td');
-            td.innerHTML = DATA[key].type;
-            tr.appendChild(td);
-            td = document.createElement('td');
-            td.innerHTML = DATA[key].subtype;
-            tr.appendChild(td);
-            td = document.createElement('td');
-            td.innerHTML = getGlyphRarities(DATA[key].rarity);
-            tr.appendChild(td);
-            td = document.createElement('td');
-            td.innerHTML = DATA[key].location;
-            tr.appendChild(td);
-            td = document.createElement('td');
-            td.innerHTML = DATA[key].missionReward;
-            tr.appendChild(td);
-            tBody.appendChild(tr);
+        var allComponents = getComponents();
+        var componentNames;
+        var storedInventory;
+        var nrOfComponents;
+        if(filteredInventory == null) {
+            componentNames = Object.keys(allComponents);
+            storedInventory = getStoredInventory();
+        } else {
+            componentNames = Object.keys(filteredInventory);
+            storedInventory = getStoredInventory();
+        }
+        for(var i = 0; i < componentNames.length; i++) {
+            //if(storedInventory[Object.keys(storedInventory)[i]] != undefined) {
+                var tr = document.createElement('tr');
+                var td = document.createElement('td');
+                var key;
+                if(filteredInventory == null) {
+                    key = Object.keys(allComponents)[i];
+                } else {
+                    key = Object.keys(filteredInventory)[i];
+                }
+                var p = document.createElement('p');
+                var buttonMinus = document.createElement('button');
+                var input = document.createElement('input');
+                var buttonPlus = document.createElement('button');
+                p.className = 'component-p';
+                p.innerHTML = allComponents[key].name;
+                td.appendChild(p);
+                buttonMinus.id = 'button-minus-one-' + key;
+                buttonMinus.className = 'flat-butt btn-xlarge half-width';
+                buttonMinus.onclick = function () {
+                    minus(this);
+                };
+                buttonMinus.field = key;
+                buttonMinus.innerHTML = '-';
+                td.appendChild(buttonMinus);
+                input.id = key;
+                input.name = key;
+                input.onkeyup = function () {
+                    storeValue(this)
+                };
+                input.onchange = function () {
+                    storeValue(this)
+                };
+                input.className = 'form-control form-orange';
+                input.type = 'number';
+                input.value = getStoredValue(storedInventory[key]);
+                input.min = '0';
+                td.appendChild(input);
+                buttonPlus.id = 'button-plus-one-' + key;
+                buttonPlus.className = 'flat-butt btn-xlarge half-width';
+                buttonPlus.onclick = function () {
+                    plus(this);
+                };
+                buttonPlus.field = key;
+                buttonPlus.innerHTML = '+';
+                td.appendChild(buttonPlus);
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.className = 'component-td';
+                td.innerHTML = allComponents[key].name;
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.innerHTML = allComponents[key].type;
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.innerHTML = allComponents[key].subtype;
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.innerHTML = getGlyphRarities(allComponents[key].rarity);
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.innerHTML = allComponents[key].location;
+                tr.appendChild(td);
+                td = document.createElement('td');
+                td.innerHTML = allComponents[key].missionReward;
+                tr.appendChild(td);
+                tBody.appendChild(tr);
+            //}
         }
     }
 
@@ -1174,7 +1214,7 @@
     }
 
     function updateTotals() {
-        var nrOfComponents = Object.keys(DATA).length;
+        var nrOfComponents = Object.keys(COMPONENTS).length;
         var totalNrOfComponents = 0;
         var totalNrOfMaterials = 0;
         var totalNrOfElements = 0;
@@ -1184,17 +1224,17 @@
         for(var i = 0; i < nrOfComponents; i++) {
             var tr = document.createElement('tr');
             var td = document.createElement('td');
-            var key = Object.keys(DATA)[i];
+            var key = Object.keys(COMPONENTS)[i];
             var storedInventory = getStoredInventory();
             if(isNumeric(storedInventory[key])) {
                 totalNrOfComponents += parseInt(storedInventory[key]);
-                if(DATA[key].type == 'Man') {
+                if(COMPONENTS[key].type == 'Man') {
                     totalNrOfMaterials += parseInt(storedInventory[key]);
-                } else if(DATA[key].type == 'Ele') {
+                } else if(COMPONENTS[key].type == 'Ele') {
                     totalNrOfElements += parseInt(storedInventory[key]);
-                } else if(DATA[key].type == 'Data') {
+                } else if(COMPONENTS[key].type == 'Data') {
                     totalNrOfData += parseInt(storedInventory[key]);
-                } else if(DATA[key].type == 'Com') {
+                } else if(COMPONENTS[key].type == 'Com') {
                     totalNrOfCommodities += parseInt(storedInventory[key]);
                 }
             }
@@ -1250,6 +1290,36 @@
         return spanElement.outerHTML;
     }
 
+    function filterInventory(filterBy) {
+        var allComponents = getComponents();
+        var allComponentNames = Object.keys(allComponents);
+        var filteredComponents = {};
+        var merge;
+
+        if(filterBy != 'empty') {
+            for (var i = 0; i < allComponentNames.length; i++) {
+                if(filterBy == 'Ele-Man') {
+                    if(allComponents[allComponentNames[i]].type == 'Ele' || allComponents[allComponentNames[i]].type == 'Man') {
+                        var filteredComponent = {};
+                        filteredComponent[allComponentNames[i]] = allComponents[allComponentNames[i]];
+                        merge = extend(filteredComponents, filteredComponent);
+                    }
+                } else if (allComponents[allComponentNames[i]].type == filterBy) {
+                    var filteredComponent = {};
+                    filteredComponent[allComponentNames[i]] = allComponents[allComponentNames[i]];
+                    merge = extend(filteredComponents, filteredComponent);
+                }
+            }
+        } else {
+            filteredComponents = getComponents();
+        }
+
+        generateInventoryList(filteredComponents);
+    }
+
+    function getComponents() {
+        return COMPONENTS;
+    }
 
     function extend (target) {
         for(var i=1; i<arguments.length; ++i) {

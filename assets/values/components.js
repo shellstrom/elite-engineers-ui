@@ -1,4 +1,4 @@
-var DATA =
+var COMPONENTS =
 {
     "aberrant-shield-pattern-analysis": {
         "name": "Aberrant Shield Pattern Analysis",

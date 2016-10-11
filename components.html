@@ -77,17 +77,17 @@
     updateTotals();
     function generateComponentsList() {
         var tBody = document.getElementById('components-body');
-        var nrOfComponents = Object.keys(DATA).length;
+        var nrOfComponents = Object.keys(COMPONENTS).length;
         for(var i = 0; i < nrOfComponents; i++) {
             var tr = document.createElement('tr');
             var td = document.createElement('td');
-            var key = Object.keys(DATA)[i];
+            var key = Object.keys(COMPONENTS)[i];
             var p = document.createElement('p');
             var buttonMinus = document.createElement('button');
             var input = document.createElement('input');
             var buttonPlus = document.createElement('button');
             p.className = 'component-p';
-            p.innerHTML = DATA[key].name;
+            p.innerHTML = COMPONENTS[key].name;
             td.appendChild(p);
             buttonMinus.id = 'button-minus-one-'+key;
             buttonMinus.className = 'flat-butt btn-xlarge half-width';
@@ -113,22 +113,22 @@
             tr.appendChild(td);
             td = document.createElement('td');
             td.className = 'component-td';
-            td.innerHTML = DATA[key].name;
+            td.innerHTML = COMPONENTS[key].name;
             tr.appendChild(td);
             td = document.createElement('td');
-            td.innerHTML = DATA[key].type;
+            td.innerHTML = COMPONENTS[key].type;
             tr.appendChild(td);
             td = document.createElement('td');
-            td.innerHTML = DATA[key].subtype;
+            td.innerHTML = COMPONENTS[key].subtype;
             tr.appendChild(td);
             td = document.createElement('td');
-            td.innerHTML = DATA[key].rarity;
+            td.innerHTML = COMPONENTS[key].rarity;
             tr.appendChild(td);
             td = document.createElement('td');
-            td.innerHTML = DATA[key].location;
+            td.innerHTML = COMPONENTS[key].location;
             tr.appendChild(td);
             td = document.createElement('td');
-            td.innerHTML = DATA[key].missionReward;
+            td.innerHTML = COMPONENTS[key].missionReward;
             tr.appendChild(td);
             tBody.appendChild(tr);
         }
@@ -182,7 +182,7 @@
     }
 
     function updateTotals() {
-        var nrOfComponents = Object.keys(DATA).length;
+        var nrOfComponents = Object.keys(COMPONENTS).length;
         var totalNrOfComponents = 0;
         var totalNrOfMaterials = 0;
         var totalNrOfElements = 0;
@@ -192,16 +192,16 @@
         for(var i = 0; i < nrOfComponents; i++) {
             var tr = document.createElement('tr');
             var td = document.createElement('td');
-            var key = Object.keys(DATA)[i];
+            var key = Object.keys(COMPONENTS)[i];
             if(isNumeric(localStorage.getItem(key))) {
                 totalNrOfComponents += parseInt(localStorage.getItem(key));
-                if(DATA[key].type == 'Man') {
+                if(COMPONENTS[key].type == 'Man') {
                     totalNrOfMaterials += parseInt(localStorage.getItem(key));
-                } else if(DATA[key].type == 'Ele') {
+                } else if(COMPONENTS[key].type == 'Ele') {
                     totalNrOfElements += parseInt(localStorage.getItem(key));
-                } else if(DATA[key].type == 'Data') {
+                } else if(COMPONENTS[key].type == 'Data') {
                     totalNrOfData += parseInt(localStorage.getItem(key));
-                } else if(DATA[key].type == 'Com') {
+                } else if(COMPONENTS[key].type == 'Com') {
                     totalNrOfCommodities += parseInt(localStorage.getItem(key));
                 }
             }

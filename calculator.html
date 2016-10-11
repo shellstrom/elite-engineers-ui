@@ -40,7 +40,7 @@
         <div id="content-left" class="col-lg-5">
             <div class="row">
                 <div class="col-lg-5 orange-header white panel"><h6>Ship profile</h6></div>
-                <div class="col-lg-5 col-lg-offset-1 orange-header white panel"><h6>Modula upgrade</h6></div>
+                <div class="col-lg-5 col-lg-offset-1 orange-header white panel"><h6>Module upgrade</h6></div>
             </div>
             <div class="row small-top-buffer">
                 <div class="col-lg-5 no-padding">
@@ -387,18 +387,19 @@
                 availableBlueprintsElement.appendChild(pElement);
             }
         }
-    };
+    }
 
     function generateChosenBlueprints() {
         var allBlueprints = getBlueprints();
         var blueprints;
+        var source = CHOSEN;
         var chosenBlueprints = getStoredChosenBlueprints();
         var storedInventory = getStoredInventory();
         if(getStoredChosenBlueprints() !== null) {
-            var blueprintAmounts = document.getElementById('blueprint-amounts');
+            var blueprintAmountsElement = document.getElementById('blueprint-amounts');
 
-            while(blueprintAmounts.firstChild){
-                blueprintAmounts.removeChild(blueprintAmounts.firstChild);
+            while(blueprintAmountsElement.firstChild){
+                blueprintAmountsElement.removeChild(blueprintAmountsElement.firstChild);
             }
             var storedChosenBlueprints = blueprints = getStoredChosenBlueprints();
             var blueprintsKeys = Object.keys(blueprints);
@@ -408,13 +409,13 @@
 
             for(var i = 0; i < Object.keys(blueprints).length; i++) {
                 var blueprint = blueprints[blueprintsKeys[i]];
-                if(blueprint === undefined) {
+                if (blueprint === undefined) {
                     continue;
                 }
                 //console.log(blueprint);
                 var blueprintId = blueprintsKeys[i].toString();
                 var blueprintModuleName = blueprint.module;
-                for(var ii = 1; ii < 6; ii++) {
+                for (var ii = 1; ii < 6; ii++) {
 
                     var grade = blueprint.recipes[ii.toString()];
                     if (grade === undefined) {
@@ -422,79 +423,14 @@
                     } else {
                         grade = ii;
                     }
-                    var recipeRowElement = document.createElement('div');
-                    recipeRowElement.id = 'chosen-' +blueprintId+ '-' +grade;
-                    recipeRowElement.classList = 'row recipeRowElement small-top-padding';
-                    var closeButton = document.createElement('span');
-                    closeButton.onclick = function (rowElement) { return function() {removeBlueprint(rowElement)}}(recipeRowElement);
-                    closeButton.classList = 'glyphicon glyphicon-remove remove-button';
-                    var recipeRowTitleElement = document.createElement('div');
-                    recipeRowTitleElement.classList = 'col-md-11';
 
-                    grade = blueprint.recipes[ii.toString()];
-                    if(grade === undefined) {
-                        continue;
-                    }
-                    //TODO Why does this work fo immuting?
-                    const number = ii;
-                    var text = allBlueprints[blueprintId].name;
-                    recipeRowTitleElement.appendChild(closeButton);
-                    var recipeRowTitleText = document.createTextNode(text);
-                    recipeRowTitleElement.appendChild(recipeRowTitleText);
-                    getGlyphNuts(CHOSEN, recipeRowTitleElement, ii, null);
-                    var appliedBlueprintElementButton = document.createElement('span');
-                    appliedBlueprintElementButton.id = blueprintId+'-'+ii;
-                    appliedBlueprintElementButton.onclick = function() {appliedBlueprint(blueprintId, number)};
-                    appliedBlueprintElementButton.classList = 'glyphicon glyphicon-ok ok-button';
-                    recipeRowTitleElement.appendChild(appliedBlueprintElementButton);
-
-                    var recipeComponentRowElement = document.createElement('div');
-                    recipeComponentRowElement.classList = 'row recipeComponentRowElement';
-                    var recipeComponentElement = document.createElement('div');
-                    var recipeComponentsRowElement = document.createElement('div');
-                    recipeComponentsRowElement.classList = 'row recipeComponentsRowElement';
-                    recipeComponentElement.classList = 'col-md-11 col-lg-offset-1';
-                    recipeRowElement.appendChild(recipeRowTitleElement);
-                    for (var component in blueprint.recipes[ii.toString()].components) {
-                        if (blueprint.recipes[ii.toString()].components.hasOwnProperty(component)) {
-                            text = component.split('-');
-
-                            var newText = '';
-                            for(var iii = 0; iii < text.length; iii++) {
-                                if(iii == 0) {
-                                    newText += text[iii].charAt(0).toUpperCase() + text[iii].slice(1);
-                                } else {
-                                    newText += ' ' +text[iii].charAt(0).toUpperCase() + text[iii].slice(1);
-                                }
-                            }
-                            var componentTextLeftElement = document.createElement('div');
-                            componentTextLeftElement.classList = 'component-' + grade + ' col-lg-11';
-                            var componentTextRightElement = document.createElement('div');
-                            componentTextRightElement.classList = 'component-' + i + '-inventory';
-                            var componentTextRight = getColouredText(blueprint.recipes[ii.toString()].components[component], getStoredValue(storedInventory[component]));
-                            componentTextRightElement.appendChild(componentTextRight);
-                            var componentTextLeftNode = document.createTextNode(newText + ' (' + blueprint.recipes[ii.toString()].components[component] + ')');
-                            componentTextLeftElement.appendChild(componentTextLeftNode);
-
-                            recipeComponentsRowElement.appendChild(componentTextLeftElement);
-                            recipeComponentsRowElement.appendChild(componentTextRightElement);
-                        }
-                    }
-                    recipeComponentElement.appendChild(recipeComponentsRowElement);
-                    recipeComponentRowElement.appendChild(recipeComponentElement);
-                    recipeRowElement.appendChild(recipeComponentRowElement);
-                    blueprintAmounts.appendChild(recipeRowElement);
+                    generateBlueprintRecipe(blueprintAmountsElement, allBlueprints, storedInventory, source, blueprintId, grade, blueprint);
                 }
-
             }
-            //delete storedAvailableBlueprints[blueprintId].recipes[grade.toString()];
-            //setStoredAvailableBlueprints(storedAvailableBlueprints);
-            //addAvailableBluePrints();
         }
     }
 
     function toggleBlueprint(source, element) {
-
         var allBlueprints = JSON.parse(JSON.stringify(BLUEPRINTS));
         var storedAvailableBlueprints;
         var storedChosenBlueprints;
@@ -513,72 +449,17 @@
         var split = blueprintId.split('-');
         blueprintId = split.slice(0, split.length - 1).join('-');
         var grade = split[split.length-1];
-        var blueprintAmounts = document.getElementById('blueprint-amounts');
-        var blueprintsKeys = Object.keys(storedAvailableBlueprints);
-        blueprintsKeys.sort();
+
+        var blueprintAmountsElement = document.getElementById('blueprint-amounts');
+        var storedBlueprintsKeys = Object.keys(storedAvailableBlueprints);
+        storedBlueprintsKeys.sort();
 
         var blueprint;
         if(storedAvailableBlueprints[blueprintId].recipes[grade] !== undefined) {
             blueprint = storedAvailableBlueprints[blueprintId];
             source = AVAILABLE;
             if(blueprint.recipes[grade] !== undefined) {
-                var blueprintModuleName = blueprint.module;
-                var recipeRowElement = document.createElement('div');
-                recipeRowElement.id = 'chosen-' +blueprintId+ '-' +grade;
-                recipeRowElement.classList = 'row recipeRowElement small-top-padding';
-                var closeButton = document.createElement('span');
-                closeButton.onclick = function () {removeBlueprint(recipeRowElement)};
-                closeButton.classList = 'glyphicon glyphicon-remove remove-button';
-                var recipeRowTitleElement = document.createElement('div');
-                recipeRowTitleElement.classList = 'col-md-11';
-
-                var text = allBlueprints[blueprintId].name;
-                recipeRowTitleElement.appendChild(closeButton);
-                var recipeRowTitleText = document.createTextNode(text);
-                recipeRowTitleElement.appendChild(recipeRowTitleText);
-                getGlyphNuts(source, recipeRowTitleElement, parseInt(grade), null);
-                var appliedBlueprintElementButton = document.createElement('span');
-                appliedBlueprintElementButton.onclick = function() {appliedBlueprint(blueprintId, grade)};
-                appliedBlueprintElementButton.classList = 'glyphicon glyphicon-ok ok-button';
-                recipeRowTitleElement.appendChild(appliedBlueprintElementButton);
-
-                var recipeComponentRowElement = document.createElement('div');
-                recipeComponentRowElement.classList = 'row recipeComponentRowElement';
-                var recipeComponentElement = document.createElement('div');
-                var recipeComponentsRowElement = document.createElement('div');
-                recipeComponentsRowElement.classList = 'row recipeComponentsRowElement';
-                recipeComponentElement.classList = 'col-md-11 col-lg-offset-1';
-                recipeRowElement.appendChild(recipeRowTitleElement);
-                for(var component in blueprint.recipes[grade.toString()].components) {
-                    if(blueprint.recipes[grade.toString()].components.hasOwnProperty(component)) {
-                        text = component.split('-');
-
-                        var newText = '';
-                        for(var iii = 0; iii < text.length; iii++) {
-                            if(iii == 0) {
-                                newText += text[iii].charAt(0).toUpperCase() + text[iii].slice(1);
-                            } else {
-                                newText += ' ' +text[iii].charAt(0).toUpperCase() + text[iii].slice(1);
-                            }
-                        }
-                        var componentTextLeftElement = document.createElement('div');
-                        componentTextLeftElement.classList = 'component-' +grade+ ' col-lg-11';
-                        var componentTextRightElement = document.createElement('div');
-                        componentTextRightElement.classList = 'component-' +grade+ '-inventory';
-                        var componentTextRight = getColouredText(blueprint.recipes[grade.toString()].components[component], getStoredValue(storedInventory[component]));
-                        componentTextRightElement.appendChild(componentTextRight);
-                        var componentTextLeftNode = document.createTextNode(newText + ' (' +blueprint.recipes[grade.toString()].components[component]+ ')');
-                        componentTextLeftElement.appendChild(componentTextLeftNode);
-
-                        recipeComponentsRowElement.appendChild(componentTextLeftElement);
-                        recipeComponentsRowElement.appendChild(componentTextRightElement);
-                    }
-                }
-                recipeComponentElement.appendChild(recipeComponentsRowElement);
-                recipeComponentRowElement.appendChild(recipeComponentElement);
-                recipeRowElement.appendChild(recipeComponentRowElement);
-                blueprintAmounts.appendChild(recipeRowElement);
-
+                generateBlueprintRecipe(blueprintAmountsElement, allBlueprints, storedInventory, source, blueprintId, grade, blueprint);
             }
         } else if(storedChosenBlueprints[blueprintId].recipes[grade] !== undefined) {
             blueprint = storedChosenBlueprints[blueprintId];
@@ -586,17 +467,8 @@
             document.getElementById('chosen-' +blueprintId+ '-' +grade).remove();
         }
 
-//        var chosenBlueprint = storedAvailableBlueprints[blueprintId];
-//        var storedChosenBlueprints;
-//        if(getStoredChosenBlueprints() === null) {
-//            storedChosenBlueprints = {};
-//        } else {
-//            storedChosenBlueprints = getStoredChosenBlueprints();
-//        }
         var chosenGrade = JSON.parse(grade.toString());
         var chosenRecipe = JSON.parse(JSON.stringify(allBlueprints[blueprintId.toString()].recipes[grade.toString()]));
-
-
 
         var chosenBlueprints = {};
         chosenBlueprints[blueprintId] = {};
@@ -606,16 +478,69 @@
 
         moveBlueprint(source, chosenBlueprints, storedAvailableBlueprints, storedChosenBlueprints);
 
-        //var aMerge = extend({}, storedChosenBlueprints, chosenBlueprints);
-        //console.log(aMerge);
-        //delete blueprints[blueprintId].recipes[grade.toString()];
-        //console.log(element.onclick);
-        //element.onclick = function() { return false };
         if(element.classList.contains('darken')) {
             element.classList.remove('darken');
         } else {
             element.classList.add('darken');
         }
+    }
+
+    function generateBlueprintRecipe(blueprintAmountsElement, allBlueprints, storedInventory, source, blueprintId, grade, blueprint) {
+        var recipeRowElement = document.createElement('div');
+        recipeRowElement.id = 'chosen-' +blueprintId+ '-' +grade;
+        recipeRowElement.classList = 'row recipeRowElement small-top-padding';
+        var closeButton = document.createElement('span');
+        closeButton.onclick = function () {removeBlueprint(recipeRowElement)};
+        closeButton.classList = 'glyphicon glyphicon-remove remove-button flat-butt';
+        var recipeRowTitleElement = document.createElement('div');
+        recipeRowTitleElement.classList = 'col-md-11';
+
+        var text = allBlueprints[blueprintId].name;
+        recipeRowTitleElement.appendChild(closeButton);
+        var recipeRowTitleText = document.createTextNode(text);
+        recipeRowTitleElement.appendChild(recipeRowTitleText);
+        getGlyphNuts(source, recipeRowTitleElement, parseInt(grade), null);
+        var appliedBlueprintElementButton = document.createElement('span');
+        appliedBlueprintElementButton.onclick = function() {appliedBlueprint(blueprintId, grade)};
+        appliedBlueprintElementButton.classList = 'glyphicon glyphicon-ok ok-button flat-butt';
+        recipeRowTitleElement.appendChild(appliedBlueprintElementButton);
+
+        var recipeComponentRowElement = document.createElement('div');
+        recipeComponentRowElement.classList = 'row recipeComponentRowElement';
+        var recipeComponentElement = document.createElement('div');
+        var recipeComponentsRowElement = document.createElement('div');
+        recipeComponentsRowElement.classList = 'row recipeComponentsRowElement';
+        recipeComponentElement.classList = 'col-md-11 col-lg-offset-1';
+        recipeRowElement.appendChild(recipeRowTitleElement);
+        for(var component in blueprint.recipes[grade.toString()].components) {
+            if(blueprint.recipes[grade.toString()].components.hasOwnProperty(component)) {
+                text = component.split('-');
+
+                var newText = '';
+                for(var iii = 0; iii < text.length; iii++) {
+                    if(iii == 0) {
+                        newText += text[iii].charAt(0).toUpperCase() + text[iii].slice(1);
+                    } else {
+                        newText += ' ' +text[iii].charAt(0).toUpperCase() + text[iii].slice(1);
+                    }
+                }
+                var componentTextLeftElement = document.createElement('div');
+                componentTextLeftElement.classList = 'component-' +grade+ ' col-lg-11';
+                var componentTextRightElement = document.createElement('div');
+                componentTextRightElement.classList = 'component-' +grade+ '-inventory';
+                var componentTextRight = getColouredText(blueprint.recipes[grade.toString()].components[component], getStoredValue(storedInventory[component]));
+                componentTextRightElement.appendChild(componentTextRight);
+                var componentTextLeftNode = document.createTextNode(newText + ' (' +blueprint.recipes[grade.toString()].components[component]+ ')');
+                componentTextLeftElement.appendChild(componentTextLeftNode);
+
+                recipeComponentsRowElement.appendChild(componentTextLeftElement);
+                recipeComponentsRowElement.appendChild(componentTextRightElement);
+            }
+        }
+        recipeComponentElement.appendChild(recipeComponentsRowElement);
+        recipeComponentRowElement.appendChild(recipeComponentElement);
+        recipeRowElement.appendChild(recipeComponentRowElement);
+        blueprintAmountsElement.appendChild(recipeRowElement);
     }
 
     function appliedBlueprint(blueprintId, grade) {
@@ -643,15 +568,12 @@
         var grade = split[split.length-1];
         var storedChosenBlueprints = getStoredChosenBlueprints();
         var storedAvailableBlueprints = getStoredAvailableBlueprints();
-        //console.log(storedChosenBlueprints[blueprintId].recipes[grade.toString()]);
-        //delete storedChosenBlueprints[blueprintId].recipes[grade.toString()];
         delete storedChosenBlueprints[blueprintId].recipes[grade.toString()];
         if(Object.keys(storedChosenBlueprints[blueprintId].recipes).length < 1) {
             delete storedChosenBlueprints[blueprintId];
         }
 
         var chosenGrade = JSON.parse(grade.toString());
-        //console.log(JSON.stringify(allBlueprints[blueprintId.toString()].recipes[grade.toString()]));
         var chosenRecipe = JSON.parse(JSON.stringify(allBlueprints[blueprintId.toString()].recipes[grade.toString()]));
         var mergeBlueprint = {};
         mergeBlueprint[blueprintId] = {};
@@ -720,14 +642,10 @@
 
     function getStoredShips() {
         var storedShips = JSON.parse(localStorage.getItem('stored-ed-ships'));
-        //console.log(storedShips);
         return storedShips;
     }
 
     function getBlueprints() {
-
-        //var storedShips = JSON.parse(RECIPES);
-        //console.log(storedShips);
         return BLUEPRINTS;
     }
 

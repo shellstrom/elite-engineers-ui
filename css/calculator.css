@@ -21,6 +21,7 @@ td.no-top-border {
 .flat-butt {
     display: inline-block;
     padding: 0.5rem;
+    top: 0;
     border: 0;
     background: #291607;
     color: #ff7100;

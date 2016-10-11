@@ -135,6 +135,10 @@ b.blue {
     color: #ff7100;
 }
 
+.dark-orange-background {
+    background-color: #291607;
+}
+
 .right {
     float: right;
 }

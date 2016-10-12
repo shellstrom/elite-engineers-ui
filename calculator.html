@@ -23,24 +23,26 @@
     <link rel="stylesheet" href="css/components-extension.css">
 </head>
 <body>
-<div class="container-fluid">
-    <div class="row">
-        <div id="header"><h1>Calculator</h1><img class="image" src="assets/drawables/engineer-header.png"/></div>
-    </div>
-    <div id="menu-buttons" class="row">
-        <div class="col-lg-12">
-            <button id="page-1" class="flat-butt" onclick="switchPage(this)">Calculator</button>
-            <button id="page-2" class="flat-butt" onclick="switchPage(this)">Blueprints</button>
-            <button id="page-3" class="flat-butt" onclick="switchPage(this)">Inventory</button>
-            <button id="page-4" class="flat-butt" onclick="switchPage(this)">Shopping list</button>
-            <button id="page-5" class="flat-butt" onclick="switchPage(this)">Page 5</button>
+<!-- Fixed navbar -->
+<nav id="calculator-nav" class="navbar navbar-default navbar-fixed-top">
+    <div class="navbar-header">
+        <div id="menu-buttons" class="row">
+            <div class="col-lg-12">
+                <button id="page-1" class="flat-butt" onclick="switchPage(this)">Calculator</button>
+                <button id="page-2" class="flat-butt" onclick="switchPage(this)">Blueprints</button>
+                <button id="page-3" class="flat-butt" onclick="switchPage(this)">Inventory</button>
+                <button id="page-4" class="flat-butt" onclick="switchPage(this)">Shopping list</button>
+                <button id="page-5" class="flat-butt" onclick="switchPage(this)">Page 5</button>
+            </div>
         </div>
     </div>
+</nav>
+<div class="container-fluid">
     <div id="div-page-1" class="row large-top-buffer">
         <div id="content-left" class="col-lg-5">
             <div class="row">
-                <div class="col-lg-5 orange-header white panel"><h6>Ship profile</h6></div>
-                <div class="col-lg-5 col-lg-offset-1 orange-header white panel"><h6>Module upgrade</h6></div>
+                <div class="col-lg-5 orange-header white panel"><p class="small-center-header">Ship profile</p></div>
+                <div class="col-lg-5 col-lg-offset-1 orange-header white panel"><p class="small-center-header">Module upgrade</p></div>
             </div>
             <div class="row small-top-buffer">
                 <div class="col-lg-5 no-padding">
@@ -93,51 +95,41 @@
         </div>
     </div>
     <div id="div-page-3" class="row large-top-buffer removed">
-        <div data-reactroot="">
-            <div class="container-fluid">
-                <div class="row">
-                    <div id="content-column">
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="col-md-3">
-                                <select class="form-orange" id="component-filter">
-                                    <option name="empty" value="empty">None</option>
-                                    <option name="Com" value="Com">Commodity</option>
-                                    <option name="Data" value="Data">Data</option>
-                                    <option name="Ele" value="Ele">Element</option>
-                                    <option name="Man" value="Man">Manufactured</option>
-                                    <option name="Man" value="Ele-Man">Ele-Man</option>
-                                </select>
-                                </div>
-                                <table id="component-table" class="table">
-                                    <thead>
-                                    <tr>
-                                        <th>Personal stock</th>
-                                        <th>Component</th>
-                                        <th>Type</th>
-                                        <th>Subtype</th>
-                                        <th>Rarity</th>
-                                        <th>Location</th>
-                                        <th>Mission reward</th>
-                                    </tr>
-                                    </thead>
-                                    <tbody id="components-body">
-                                    </tbody>
-                                </table>
-                                <div>
-                                    <p>Total number of components: <span id="components-total"></span></p>
-                                    <p>Total number of materials: <span id="materials-total"></span></p>
-                                    <p>Total number of elements: <span id="elements-total"></span></p>
-                                    <p>Total number of data: <span id="data-total"></span></p>
-                                    <p>Total number of commodities: <span id="commodities-total"></span></p>
-                                    <p>Total number of components you are missing: <span id="components-missing"></span></p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+            <div class="col-md-12">
+                <div class="col-md-3">
+                <select class="form-orange" id="component-filter">
+                    <option name="empty" value="empty">None</option>
+                    <option name="Com" value="Com">Commodity</option>
+                    <option name="Data" value="Data">Data</option>
+                    <option name="Ele" value="Ele">Element</option>
+                    <option name="Man" value="Man">Manufactured</option>
+                    <option name="Man" value="Ele-Man">Ele-Man</option>
+                </select>
+                </div>
+                <table id="component-table" class="table">
+                    <thead>
+                    <tr>
+                        <th>Personal stock</th>
+                        <th>Component</th>
+                        <th>Type</th>
+                        <th>Subtype</th>
+                        <th>Rarity</th>
+                        <th>Location</th>
+                        <th>Mission reward</th>
+                    </tr>
+                    </thead>
+                    <tbody id="components-body">
+                    </tbody>
+                </table>
+                <div>
+                    <p>Total number of components: <span id="components-total"></span></p>
+                    <p>Total number of materials: <span id="materials-total"></span></p>
+                    <p>Total number of elements: <span id="elements-total"></span></p>
+                    <p>Total number of data: <span id="data-total"></span></p>
+                    <p>Total number of commodities: <span id="commodities-total"></span></p>
+                    <p>Total number of components you are missing: <span id="components-missing"></span></p>
                 </div>
             </div>
-        </div>
     </div>
     <div id="div-page-4" class="row large-top-buffer removed">
         <div id="content-left-4" class="col-lg-5">

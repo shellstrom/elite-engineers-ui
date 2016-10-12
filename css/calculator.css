@@ -42,6 +42,12 @@ td.no-top-border {
     max-height: 15rem;
 }
 
+.small-center-header {
+    line-height: 40px;
+    text-align: center;
+    height: 24px;
+}
+
 .modal-background {
     background-color: transparent;
     background: url("../assets/drawables/ship-backdrop.png");

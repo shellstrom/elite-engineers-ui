@@ -45,6 +45,15 @@
     color: darkorange;
 }
 
+.form-orange-inline {
+    display: inline;
+    font-size: 1rem;
+    border: 1px solid #ccc;
+    background-color: black;
+    border-color: darkorange;
+    color: darkorange;
+}
+
 .component-p {
     display: block;
 }

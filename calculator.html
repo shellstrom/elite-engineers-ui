@@ -80,6 +80,23 @@
         </div>
     </div>
     <div id="div-page-2" class="row large-top-buffer removed">
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-inline">
+                    <div class="form-group">
+                        <!--<select class="form-control form-orange-inline" id="blueprint-filter">
+                            <option name="empty" value="empty">None</option>
+                            <option name="Com" value="Com">Commodity</option>
+                            <option name="Data" value="Data">Data</option>
+                            <option name="Ele" value="Ele">Element</option>
+                            <option name="Man" value="Man">Manufactured</option>
+                            <option name="Man" value="Ele-Man">Ele-Man</option>
+                        </select>-->
+                        <input type="text" id="blueprint-filter-search" class="form-control form-orange-inline" onkeyup="filterSearch(BLUEPRINTS_PAGE)" placeholder="Filter by typing...">
+                    </div>
+                </div>
+            </div>
+        </div>
         <div id="content-left-2" class="col-lg-5">
             <div class="row">
                 <div class="orange-header white panel"><h6>Available blueprints</h6></div>
@@ -95,41 +112,48 @@
         </div>
     </div>
     <div id="div-page-3" class="row large-top-buffer removed">
+        <div class="row">
             <div class="col-md-12">
-                <div class="col-md-3">
-                <select class="form-orange" id="component-filter">
-                    <option name="empty" value="empty">None</option>
-                    <option name="Com" value="Com">Commodity</option>
-                    <option name="Data" value="Data">Data</option>
-                    <option name="Ele" value="Ele">Element</option>
-                    <option name="Man" value="Man">Manufactured</option>
-                    <option name="Man" value="Ele-Man">Ele-Man</option>
-                </select>
-                </div>
-                <table id="component-table" class="table">
-                    <thead>
-                    <tr>
-                        <th>Personal stock</th>
-                        <th>Component</th>
-                        <th>Type</th>
-                        <th>Subtype</th>
-                        <th>Rarity</th>
-                        <th>Location</th>
-                        <th>Mission reward</th>
-                    </tr>
-                    </thead>
-                    <tbody id="components-body">
-                    </tbody>
-                </table>
-                <div>
-                    <p>Total number of components: <span id="components-total"></span></p>
-                    <p>Total number of materials: <span id="materials-total"></span></p>
-                    <p>Total number of elements: <span id="elements-total"></span></p>
-                    <p>Total number of data: <span id="data-total"></span></p>
-                    <p>Total number of commodities: <span id="commodities-total"></span></p>
-                    <p>Total number of components you are missing: <span id="components-missing"></span></p>
+                <div class="form-inline">
+                    <div class="form-group">
+                        <select class="form-control form-orange-inline" id="component-filter">
+                            <option name="empty" value="empty">None</option>
+                            <option name="Com" value="Com">Commodity</option>
+                            <option name="Data" value="Data">Data</option>
+                            <option name="Ele" value="Ele">Element</option>
+                            <option name="Man" value="Man">Manufactured</option>
+                            <option name="Man" value="Ele-Man">Ele-Man</option>
+                        </select>
+                        <input type="text" id="component-filter-search" class="form-control form-orange-inline" onkeyup="filterSearch(INVENTORY_PAGE)" placeholder="Filter by typing...">
+                    </div>
                 </div>
             </div>
+        </div>
+        <div class="col-md-12">
+            <table id="component-table" class="table">
+                <thead>
+                <tr>
+                    <th>Personal stock</th>
+                    <th>Component</th>
+                    <th>Type</th>
+                    <th>Subtype</th>
+                    <th>Rarity</th>
+                    <th>Location</th>
+                    <th>Mission reward</th>
+                </tr>
+                </thead>
+                <tbody id="components-body">
+                </tbody>
+            </table>
+            <div>
+                <p>Total number of components: <span id="components-total"></span></p>
+                <p>Total number of materials: <span id="materials-total"></span></p>
+                <p>Total number of elements: <span id="elements-total"></span></p>
+                <p>Total number of data: <span id="data-total"></span></p>
+                <p>Total number of commodities: <span id="commodities-total"></span></p>
+                <p>Total number of components you are missing: <span id="components-missing"></span></p>
+            </div>
+        </div>
     </div>
     <div id="div-page-4" class="row large-top-buffer removed">
         <div id="content-left-4" class="col-lg-5">
@@ -204,8 +228,8 @@
                     <div class="list-wrapper overflowed">
                         <form>
                             <fieldset class="form-group">
-                                <label for="add-ship-json">Paste your <a href="http://coriolis.io">coriolis.io</a> ship profile here</label>
-                                <textarea class="form-control" id="add-ship-json" rows="6"></textarea>
+                                <label for="add-ship-json">Paste your <a href="https://coriolis.edcd.io/">coriolis.edcd.io</a> ship profile here</label>
+                                <textarea class="form-control form-orange" id="add-ship-json" rows="6"></textarea>
                             </fieldset>
                         </form>
                     </div>
@@ -230,6 +254,8 @@
     const FILTER_TYPE_DATA = 'Data';
     const FILTER_TYPE_ELEMENT = 'Ele';
     const FILTER_TYPE_MANUFACTURED = 'Man';
+    const INVENTORY_PAGE = 'inventory';
+    const BLUEPRINTS_PAGE = 'blueprints';
 
     generateAvailableBluePrints();
     generateChosenBlueprints();
@@ -612,10 +638,12 @@
     function selectPage(pageId) {
         for (var i = 1; i < 6; i++) {
             var page = document.getElementById('div-page-' + i);
-            if (i == pageId) {
-                page.className = page.className.replace(/(?:^|\s)removed(?!\S)/g, '');
-            } else {
-                page.className += " removed";
+            if(page !== undefined) {
+                if (i == pageId && page) {
+                    page.classList.remove('removed');
+                } else {
+                    page.classList.add('removed');
+                }
             }
         }
     }
@@ -1327,6 +1355,59 @@
         }
         return target;
     }
+
+    function filterSearch(page) {
+        if(page == BLUEPRINTS_PAGE) {
+            // Declare variables
+            var input, filter, table, tr, td, i;
+            var input = document.getElementById("blueprint-filter-search");
+            var filter = input.value.toUpperCase();
+            var blueprintsDiv = document.getElementById("available-blueprints");
+            var p = blueprintsDiv.getElementsByTagName("p");
+            var availableBlueprints = getStoredAvailableBlueprints();
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (var i = 0; i < p.length; i++) {
+                if (p[i].innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    p[i].style.display = '';
+                } else {
+                    p[i].style.display = 'none';
+                }
+            }
+        } else {
+            // Declare variables
+            var input, filter, table, tr, td, i;
+            var input = document.getElementById("component-filter-search");
+            var filter = input.value.toUpperCase();
+            var table = document.getElementById("components-body");
+            var tr = table.getElementsByTagName("tr");
+            var found = false;
+
+            // Loop through all table rows, and hide those who don't match the search query
+            for (var i = 0; i < tr.length; i++) {
+                found = false;
+                for (var ii = 1; ii < 7; ii++) {
+                    td = tr[i].getElementsByTagName("td")[ii];
+                    if (td) {
+                        if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                            //tr[i].style.display = "";
+                            found = true;
+                            break;
+                        } else {
+                            //tr[i].style.display = "none";
+                            found = false;
+                        }
+                    }
+                }
+                if (found) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+
 </script>
 </body>
 </html>

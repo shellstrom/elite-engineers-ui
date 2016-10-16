@@ -204,3 +204,8 @@ b.blue {
     display: table-cell;
     vertical-align: top;
 }
+
+.form-inline .form-group{
+    margin-left: 0;
+    margin-right: 0;
+}

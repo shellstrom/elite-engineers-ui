@@ -41,17 +41,6 @@ body {
     vertical-align: middle;
 }
 
-.remove-button {
-    margin-right: 5px;
-    vertical-align: middle;
-}
-
-.ok-button {
-    vertical-align: middle;
-    right: 0;
-    position: absolute;
-}
-
 .specialisation-glyphs img {
     width: 18px;
     height: 21px;

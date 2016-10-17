@@ -120,6 +120,15 @@ td.component-td {
     filter: brightness(50%);
 }
 
+.dark-brown-background {
+    background: #291607;
+}
+
+.remove-button {
+    margin-right: 5px;
+    vertical-align: middle;
+}
+
 @media screen and (min-width: 980px) /* Desktop */ {
     #sidebar-column {
         display: initial;

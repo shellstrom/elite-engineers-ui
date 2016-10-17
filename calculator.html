@@ -14,6 +14,7 @@
     <script src="assets/values/ships.js" ></script>
     <script src="assets/values/blueprints.js" ></script>
     <script src="assets/values/components.js" ></script>
+    <script src="assets/values/ingredient-blueprints.js" ></script>
     <script src="assets/values/fsd.js" ></script>
     <link rel="stylesheet" href="css/bootstrap-glyphicons.css">
     <link rel="stylesheet" href="css/bootstrap.css">
@@ -707,6 +708,10 @@
         return BLUEPRINTS;
     }
 
+    function getInventoryBlueprints() {
+        return INVENTORY_BLUEPRINTS;
+    }
+
     function getStoredShipsArray() {
         var storedShips = JSON.parse(localStorage.getItem('stored-ed-ships'));
         //console.log(storedShips);
@@ -1072,36 +1077,13 @@
         removeChildren('components-body');
         var tBody = document.getElementById('components-body');
         var allComponents = getComponents();
-        var allBlueprints = getBlueprints();
-        var allBlueprintNames = Object.keys(allBlueprints);
+        var allInventoryBlueprints = getInventoryBlueprints();
+        var allInventoryBlueprintNames = Object.keys(allInventoryBlueprints);
         var componentNames = Object.keys(allComponents);
         var storedInventory = getStoredInventory();
-        var nrOfComponents;
-
-        var componentBlueprints
-        for(var j = 0; j < componentNames.length; j++) {
-            componentBlueprints = getComponentBlueprint(componentNames[j], allBlueprints);
-        }
-
-        function getComponentBlueprint(componentId, allBlueprints) {
-            for(var k = 0; k < allBlueprintNames.length; k++) {
-                var blueprint = allBlueprintNames[k];
-                var recipes = allBlueprints[blueprint]['recipes'];
-                for(var l = 1; l < Object.keys(recipes).length+1; l++) {
-                    var blueprintRecipeComponents = allBlueprints[blueprint]['recipes'][l]['components'];
-                    for(var m = 0; m < Object.keys(blueprintRecipeComponents).length; m++) {
-                        var component = Object.keys(blueprintRecipeComponents)[m];
-                        if(componentId == component) {
-                            console.log('found');
-                        }
-                    }
-                }
-            }
-        }
 
 
-        if(filteredInventory == null) {
-        } else {
+        if(filteredInventory != null) {
             componentNames = Object.keys(filteredInventory);
             storedInventory = getStoredInventory();
         }
@@ -1154,7 +1136,22 @@
                 tr.appendChild(td);
                 td = document.createElement('td');
                 td.className = 'component-td';
-                td.innerHTML = allComponents[key].name;
+                var componentNameText = document.createTextNode(allComponents[key].name);
+                var componentNameLink = document.createElement('a');
+                componentNameLink.href = 'test.html';
+                componentNameLink.classList.add('inventory-link');
+                var inventoryBlueprintsTitleText = "Can be found in blueprints\n";
+                if(allInventoryBlueprints[key] !== undefined) {
+                    for (var ii = 0; ii < Object.keys(allInventoryBlueprints[key]).length; ii++) {
+                        var name = allInventoryBlueprints[key][Object.keys(allInventoryBlueprints[key])[ii]].name;
+                        var grade = allInventoryBlueprints[key][Object.keys(allInventoryBlueprints[key])[ii]].grade;
+                        inventoryBlueprintsTitleText += name + "(G" + grade + ")\n";
+                    }
+                }
+                componentNameLink.title = inventoryBlueprintsTitleText;
+                componentNameLink.appendChild(componentNameText);
+                td.appendChild(componentNameLink);
+                //td.innerHTML = allComponents[key].name;
                 tr.appendChild(td);
                 td = document.createElement('td');
                 td.innerHTML = allComponents[key].type;

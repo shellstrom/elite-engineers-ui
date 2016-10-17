@@ -209,3 +209,11 @@ b.blue {
     margin-left: 0;
     margin-right: 0;
 }
+
+.inventory-link, .inventory-link:hover {
+    color: #cf6800;
+    border-bottom: dashed 1px;
+    text-decoration: none;
+    white-space: pre-line;
+    white-space: pre-wrap;
+}

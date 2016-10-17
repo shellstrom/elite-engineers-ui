@@ -7,6 +7,22 @@
  */
 
 $blueprintsJson = file_get_contents('../assets/values/blueprints.json');
-$blueprints = json_decode($blueprints);
+$blueprints = json_decode($blueprintsJson);
 
-print_r($blueprints);
+//print_r($blueprints);
+$components = array();
+foreach($blueprints as $blueprintId => $blueprint) {
+    foreach($blueprint->recipes as $recipeGrade => $recipe) {
+        foreach($recipe->components as $component => $ignore) {
+            $components[$component][$blueprintId] = array(
+                'name'=>$blueprint->name,
+                'module'=>$blueprint->module,
+                'grade'=>$recipeGrade,
+            );
+        }
+    }
+}
+print_r($components);
+$file = fopen('../assets/values/ingredient-blueprints.json', 'w');
+fwrite($file, json_encode($components));
+fclose($file);
